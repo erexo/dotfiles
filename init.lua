@@ -70,8 +70,6 @@ vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help)
 vim.keymap.set('n', '<leader>f', vim.lsp.buf.format)
 
 vim.keymap.set({'n', 'v'}, '<leader><tab>', '<C-W>w')
-vim.keymap.set({'n', 'v'}, '<leader>tt', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
-vim.keymap.set({'n', 'v'}, '<leader>tf', ':NvimTreeFindFile<CR>', { noremap = true, silent = true })
 
 vim.keymap.set('n', '<leader>gs', vim.cmd.Git)
 vim.keymap.set('n', '<leader>gd', '<cmd>Git diff<CR>', { noremap = true, silent = true})
@@ -165,6 +163,10 @@ end)
 
 vim.keymap.set('n', '<leader>m', require'memento'.toggle) -- memento
 
+vim.keymap.set('n', '<leader>tt', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>tf', ':NvimTreeFindFile<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>tc', require'nvim-tree.api'.fs.create)
+
 local telescope = require('telescope.builtin')
 vim.keymap.set({'n', 'v'}, '<leader>rf', telescope.lsp_references)
 vim.keymap.set({'n', 'v'}, '<leader>ds', telescope.lsp_document_symbols)
@@ -177,7 +179,7 @@ vim.keymap.set('n', '<C-p>', telescope.git_files, {})
 vim.keymap.set('n', '<leader>vh', telescope.help_tags, {})
 
 require('nvim-treesitter.configs').setup {
-    ensure_installed = { 
+    ensure_installed = {
         'lua', 'help', 'vim',
         'rust',
         'go',
