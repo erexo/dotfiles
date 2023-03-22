@@ -73,8 +73,14 @@ vim.keymap.set({'n', 'v'}, '<leader><tab>', '<C-W>w')
 vim.keymap.set({'n', 'v'}, '<leader>tt', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
 vim.keymap.set({'n', 'v'}, '<leader>tf', ':NvimTreeFindFile<CR>', { noremap = true, silent = true })
 
-vim.keymap.set('n', "<leader>gs", vim.cmd.Git) -- fugitive
-vim.keymap.set('n', "<leader>u", vim.cmd.UndotreeToggle) -- undotree
+vim.keymap.set('n', '<leader>gs', vim.cmd.Git)
+vim.keymap.set('n', '<leader>gd', '<cmd>Git diff<CR>', { noremap = true, silent = true})
+vim.keymap.set('n', '<leader>gl', '<cmd>Git log<CR>', { noremap = true, silent = true})
+vim.keymap.set('n', '<leader>gb', '<cmd>Git blame<CR>', { noremap = true, silent = true})
+vim.keymap.set('n', '<leader>gc', '<cmd>Git commit<CR>', { noremap = true, silent = true})
+vim.keymap.set('n', '<leader>gp', '<cmd>Git push<CR>', { noremap = true, silent = true})
+vim.keymap.set('n', '<leader>ga', '<cmd>Git show<CR>', { noremap = true, silent = true})
+vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle) -- undotree
 
 local diagnostics_active = true
 local toggle_diagnostics = function()
@@ -96,65 +102,65 @@ require('packer').startup(function(use)
             vim.cmd('colorscheme gruvbox')
         end
     }
-	use {
-		'nvim-lualine/lualine.nvim',
-		requires = { 'kyazdani42/nvim-web-devicons', opt = true }
-	}
+    use {
+        'nvim-lualine/lualine.nvim',
+        requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+    }
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.0',
         requires = { {'nvim-lua/plenary.nvim'}, {'kyazdani42/nvim-web-devicons'} }
     }
-    use { -- code highlight
-		'nvim-treesitter/nvim-treesitter',
-		run = function()
-			pcall(require('nvim-treesitter.install').update { with_sync = true })
-		end,
-	}
-	use {
-		'VonHeikemen/lsp-zero.nvim',
-		branch = 'v1.x',
-		requires = {
-			-- LSP Support
-			{'neovim/nvim-lspconfig'},
-			{'williamboman/mason.nvim'},
-			{'williamboman/mason-lspconfig.nvim'},
-			-- Autocompletion
-			{'hrsh7th/nvim-cmp'},
-			{'hrsh7th/cmp-buffer'},
-			{'hrsh7th/cmp-path'},
-			{'saadparwaiz1/cmp_luasnip'},
-			{'hrsh7th/cmp-nvim-lsp'},
-			{'hrsh7th/cmp-nvim-lua'},
-			{'onsails/lspkind.nvim'},
-			-- Snippets
-			{'L3MON4D3/LuaSnip'},
-			{'rafamadriz/friendly-snippets'},
-			-- Debugging
-			{'mfussenegger/nvim-dap'},
-			{'rcarriga/nvim-dap-ui'},
-			{'theHamsta/nvim-dap-virtual-text'},
-			{'simrat39/rust-tools.nvim'},
-			{'leoluz/nvim-dap-go'},
-		}
-	}
-	use {
-		"windwp/nvim-autopairs",
-		config = function() require("nvim-autopairs").setup {} end
-	}
-	use {
-		's1n7ax/nvim-terminal',
-		config = function()
-			vim.o.hidden = true
-			require('nvim-terminal').setup()
-		end,
-	}
-	use 'tpope/vim-fugitive' -- git management
-	use 'mbbill/undotree'
-	use 'mg979/vim-visual-multi' -- multicursor
-	use 'nvim-tree/nvim-tree.lua'
-	use 'terrortylor/nvim-comment'
-	use 'gaborvecsei/memento.nvim' -- file history
-	use 'RRethy/vim-illuminate' -- highlight same words
+    use {
+        'nvim-treesitter/nvim-treesitter',
+        run = function()
+            pcall(require('nvim-treesitter.install').update { with_sync = true })
+        end,
+    }
+    use {
+        'VonHeikemen/lsp-zero.nvim',
+        branch = 'v1.x',
+        requires = {
+            -- LSP Support
+            {'neovim/nvim-lspconfig'},
+            {'williamboman/mason.nvim'},
+            {'williamboman/mason-lspconfig.nvim'},
+            -- Autocompletion
+            {'hrsh7th/nvim-cmp'},
+            {'hrsh7th/cmp-buffer'},
+            {'hrsh7th/cmp-path'},
+            {'saadparwaiz1/cmp_luasnip'},
+            {'hrsh7th/cmp-nvim-lsp'},
+            {'hrsh7th/cmp-nvim-lua'},
+            {'onsails/lspkind.nvim'},
+            -- Snippets
+            {'L3MON4D3/LuaSnip'},
+            {'rafamadriz/friendly-snippets'},
+            -- Debugging
+            {'mfussenegger/nvim-dap'},
+            {'rcarriga/nvim-dap-ui'},
+            {'theHamsta/nvim-dap-virtual-text'},
+            {'simrat39/rust-tools.nvim'},
+            {'leoluz/nvim-dap-go'},
+        }
+    }
+    use {
+        "windwp/nvim-autopairs",
+        config = function() require("nvim-autopairs").setup {} end
+    }
+    use {
+        's1n7ax/nvim-terminal',
+        config = function()
+            vim.o.hidden = true
+            require('nvim-terminal').setup()
+        end,
+    }
+    use 'tpope/vim-fugitive' -- git management
+    use 'mbbill/undotree'
+    use 'mg979/vim-visual-multi' -- multicursor
+    use 'nvim-tree/nvim-tree.lua'
+    use 'terrortylor/nvim-comment'
+    use 'gaborvecsei/memento.nvim' -- file history
+    use 'RRethy/vim-illuminate' -- highlight same words
 end)
 
 vim.keymap.set('n', '<leader>m', require'memento'.toggle) -- memento
@@ -172,12 +178,12 @@ vim.keymap.set('n', '<leader>vh', telescope.help_tags, {})
 
 require('nvim-treesitter.configs').setup {
     ensure_installed = { 
-		'lua', 'help', 'vim',
-		'rust',
-		'go',
-		'c', 'cpp',
-		-- 'c_sharp'
-	},
+        'lua', 'help', 'vim',
+        'rust',
+        'go',
+        'c', 'cpp',
+        -- 'c_sharp'
+    },
     highlight = { enable = true },
 }
 
@@ -203,8 +209,8 @@ lsp.ensure_installed({
 local cmp = require('cmp')
 local cmp_select = {behavior = cmp.SelectBehavior.Select}
 local cmp_mappings = lsp.defaults.cmp_mappings({
-  ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-  ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
+    ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
+    ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
 })
 cmp_mappings['<Tab>'] = nil
 cmp_mappings['<S-Tab>'] = nil
@@ -236,11 +242,11 @@ for type, icon in pairs(signs) do
 end
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-	vim.lsp.diagnostic.on_publish_diagnostics, {
-		underline = true,
-		virtual_text = true,
-		signs = true,
-	}
+vim.lsp.diagnostic.on_publish_diagnostics, {
+    underline = true,
+    virtual_text = true,
+    signs = true,
+}
 )
 local format_sync_grp = vim.api.nvim_create_augroup("FileFormat", {})
 vim.api.nvim_create_autocmd("BufWritePre", {
