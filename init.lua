@@ -54,6 +54,10 @@ vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv") -- move selected up/down
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n><C-w>c') -- exit terminal
 vim.keymap.set('t', '<C-c>', '<C-\\><C-n><C-w>k')
+vim.keymap.set('i', '<C-h>', '<C-o>b') -- move by word on hl
+vim.keymap.set('i', '<C-l>', '<C-o>w')
+vim.keymap.set({'n', 'x'}, '<C-h>', 'b')
+vim.keymap.set({'n', 'x'}, '<C-l>', 'w')
 
 --> lsp
 vim.keymap.set('n', '<leader>do', '<cmd>lua vim.diagnostic.open_float()<CR>', { noremap = true, silent = true })
@@ -69,8 +73,7 @@ vim.keymap.set('n', 'K', vim.lsp.buf.hover)
 vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help)
 vim.keymap.set('n', '<leader>f', vim.lsp.buf.format)
 
-vim.keymap.set({'n', 'v'}, '<leader><tab>', '<C-W>w')
-
+--> git
 vim.keymap.set('n', '<leader>gs', vim.cmd.Git)
 vim.keymap.set('n', '<leader>gd', '<cmd>Git diff<CR>', { noremap = true, silent = true})
 vim.keymap.set('n', '<leader>gl', '<cmd>Git log<CR>', { noremap = true, silent = true})
@@ -183,7 +186,7 @@ require('nvim-treesitter.configs').setup {
         'lua', 'help', 'vim',
         'rust',
         'go',
-        'c', 'cpp',
+        -- 'c', 'cpp',
         -- 'c_sharp'
     },
     highlight = { enable = true },
