@@ -337,7 +337,7 @@ dap.adapters.go = function(callback, config)
     stdout:read_start(function(err, chunk)
         assert(not err, err)
         if chunk then
-    vim.schedule(function()
+            vim.schedule(function()
                 require('dap.repl').append(chunk)
             end)
         end
