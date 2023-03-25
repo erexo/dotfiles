@@ -6,7 +6,8 @@ git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvi
 git clone https://github.com/wbthomason/packer.nvim "$env:LOCALAPPDATA\nvim-data\site\pack\packer\start\packer.nvim"
 
 go install github.com/go-delve/delve/cmd/dlv@latest
-apt install xclip ripgrep
+apt install -y xclip ripgrep unzip
+unzip -q codelldb-x86_64-linux.vsix -d ~/lldb
 ]]
 
 vim.opt.number = true
@@ -90,7 +91,7 @@ local toggle_diagnostics = function()
 end
 vim.keymap.set('n', '<leader>td', toggle_diagnostics)
 
-vim.cmd[[autocmd BufEnter,TermOpen * if &buftype == 'terminal' | :startinsert | endif]] -- auto enter Terminal mode
+-- vim.cmd[[autocmd BufEnter * if &buftype == 'terminal' | :startinsert | endif]] -- auto enter Terminal mode
 
 -- packer
 vim.cmd.packadd('packer.nvim')
@@ -155,6 +156,12 @@ require('packer').startup(function(use)
             require('nvim-terminal').setup()
         end,
     }
+    use {
+        "folke/trouble.nvim",
+        requires = "nvim-tree/nvim-web-devicons",
+        config = function() require("trouble").setup() end
+    }
+    use 'kyazdani42/nvim-web-devicons'
     use 'tpope/vim-fugitive' -- git management
     use 'mbbill/undotree'
     use 'mg979/vim-visual-multi' -- multicursor
@@ -190,6 +197,7 @@ require('nvim-treesitter.configs').setup {
         -- 'c_sharp'
     },
     highlight = { enable = true },
+    diagnostics = { enabled = true },
 }
 
 require('lualine').setup {
@@ -251,6 +259,7 @@ vim.lsp.diagnostic.on_publish_diagnostics, {
     underline = true,
     virtual_text = true,
     signs = true,
+    update_in_insert = true
 }
 )
 local format_sync_grp = vim.api.nvim_create_augroup("FileFormat", {})
@@ -263,13 +272,13 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 })
 
 -- debugger configuration
-require("rust-tools").setup()
+require('rust-tools').setup()
 require('dap-go').setup()
 local dap = require 'dap'
 local dapui = require 'dapui'
 
 vim.keymap.set('n', '<F5>', dap.continue)
-vim.keymap.set('n', '<S-F5>', dap.terminate)
+vim.keymap.set('n', '<leader><F5>', dap.terminate)
 vim.keymap.set('n', '<F6>', dap.step_over)
 vim.keymap.set('n', '<F7>', dap.step_into)
 vim.keymap.set('n', '<F8>', dap.step_out)
@@ -279,6 +288,34 @@ vim.keymap.set('n', '<leader>dbc', '<cmd>lua require"dap".set_breakpoint(vim.fn.
 vim.keymap.set('n', '<leader>dbl', '<cmd>lua require"dap".set_breakpoint(nil, nil, vim.fn.input("Breakpoint log message: "))<CR>')
 vim.keymap.set('n', '<leader>du', dapui.toggle)
 
+dap.adapters.lldb = function(callback, _)
+    local handle
+    local pid_or_err
+    local opts = {
+        args = {"build"},
+        detached = true
+    }
+    vim.api.nvim_command('write')
+    handle, pid_or_err = vim.loop.spawn("cargo", opts, function(code)
+        handle:close()
+        if code ~=0 then
+            print('cargo build exited with code', code)
+            return
+        end
+        vim.schedule(
+        function()
+            callback({
+                type = 'server', 
+                port = 13000, 
+                executable = {
+                    command = os.getenv('HOME') .. '/lldb/extension/adapter/codelldb',
+                    args = { '--liblldb', os.getenv('HOME') .. '/lldb/extension/lldb/lib/liblldb.so', '--port', '13000' }
+                }
+            })
+        end)
+    end)
+    assert(handle, 'Error running cargo build: ' .. tostring(pid_or_err))
+end
 dap.adapters.go = function(callback, config)
     local stdout = vim.loop.new_pipe(false)
     local handle
@@ -300,18 +337,26 @@ dap.adapters.go = function(callback, config)
     stdout:read_start(function(err, chunk)
         assert(not err, err)
         if chunk then
-            vim.schedule(function()
+    vim.schedule(function()
                 require('dap.repl').append(chunk)
             end)
         end
     end)
-    -- Wait for delve to start
     vim.defer_fn(
     function()
         callback({type = "server", host = "127.0.0.1", port = port})
     end,
     100)
 end
+dap.configurations.rust = {
+    {
+        type = "lldb",
+        name = "Launch",
+        request = "launch",
+        cwd = '${workspaceFolder}',
+        program = '${workspaceFolder}/target/debug/${workspaceFolderBasename}'
+    }
+}
 dap.configurations.go = {
     {
         type = "go",
@@ -343,12 +388,13 @@ dapui.setup({
         {
             elements = {
                 "repl",
-                -- "console",
+                "console",
             },
             size = 0.25,
             position = "bottom",
         },
     },
+    controls = { enabled = false },
     floating = {
         max_height = nil,
         max_width = nil,
