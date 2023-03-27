@@ -6,7 +6,7 @@ git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvi
 git clone https://github.com/wbthomason/packer.nvim "$env:LOCALAPPDATA\nvim-data\site\pack\packer\start\packer.nvim"
 
 go install github.com/go-delve/delve/cmd/dlv@latest
-apt install -y xclip ripgrep unzip
+apt install -y xclip ripgrep fd-find unzip
 unzip -q codelldb-x86_64-linux.vsix -d ~/lldb
 ]]
 
@@ -54,7 +54,6 @@ vim.keymap.set('v', '>', '>gv')
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv") -- move selected up/down
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n><C-w>c') -- exit terminal
-vim.keymap.set('t', '<C-c>', '<C-\\><C-n><C-w>k')
 vim.keymap.set('i', '<C-h>', '<C-o>b') -- move by word on hl
 vim.keymap.set('i', '<C-l>', '<C-o>w')
 vim.keymap.set({'n', 'x'}, '<C-h>', 'b')
@@ -167,26 +166,30 @@ require('packer').startup(function(use)
     use 'mg979/vim-visual-multi' -- multicursor
     use 'nvim-tree/nvim-tree.lua'
     use 'terrortylor/nvim-comment'
-    use 'gaborvecsei/memento.nvim' -- file history
     use 'RRethy/vim-illuminate' -- highlight same words
+    use 'tpope/vim-surround'
 end)
-
-vim.keymap.set('n', '<leader>m', require'memento'.toggle) -- memento
 
 vim.keymap.set('n', '<leader>tt', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>tf', ':NvimTreeFindFile<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>tc', require'nvim-tree.api'.fs.create)
+vim.keymap.set('n', '<leader>tr', ':TroubleToggle<CR>', { noremap = true, silent = true })
 
 local telescope = require('telescope.builtin')
 vim.keymap.set({'n', 'v'}, '<leader>rf', telescope.lsp_references)
 vim.keymap.set({'n', 'v'}, '<leader>ds', telescope.lsp_document_symbols)
 vim.keymap.set({'n', 'v'}, '<leader>ws', telescope.lsp_dynamic_workspace_symbols)
-vim.keymap.set('n', '<leader>sf', telescope.find_files, { --[[ previewer = false ]] })
-vim.keymap.set('n', '<leader>sg', function()
+vim.keymap.set('n', '<leader>sf', telescope.find_files)
+vim.keymap.set('n', '<leader>sg', telescope.live_grep)
+vim.keymap.set('n', '<leader>sG', function()
     telescope.grep_string({ search = vim.fn.input("Grep > ") }) -- ripgrep required
 end)
-vim.keymap.set('n', '<C-p>', telescope.git_files, {})
-vim.keymap.set('n', '<leader>vh', telescope.help_tags, {})
+vim.keymap.set('n', '<leader>sb', ':Telescope buffers previewer=false<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>m', ':Telescope oldfiles previewer=false<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>sc', telescope.commands)
+vim.keymap.set('n', '<leader>sh', telescope.command_history)
+vim.keymap.set('n', '<leader>sm', telescope.keymaps)
+vim.keymap.set('n', '<leader>st', telescope.help_tags, {})
 
 require('nvim-treesitter.configs').setup {
     ensure_installed = {
@@ -259,9 +262,7 @@ vim.lsp.diagnostic.on_publish_diagnostics, {
     underline = true,
     virtual_text = true,
     signs = true,
-    update_in_insert = true
-}
-)
+})
 local format_sync_grp = vim.api.nvim_create_augroup("FileFormat", {})
 vim.api.nvim_create_autocmd("BufWritePre", {
     pattern = { "*.rs", "*.go" },
