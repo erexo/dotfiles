@@ -90,8 +90,6 @@ local toggle_diagnostics = function()
 end
 vim.keymap.set('n', '<leader>td', toggle_diagnostics)
 
--- vim.cmd[[autocmd BufEnter * if &buftype == 'terminal' | :startinsert | endif]] -- auto enter Terminal mode
-
 -- packer
 vim.cmd.packadd('packer.nvim')
 require('packer').startup(function(use)
@@ -160,6 +158,12 @@ require('packer').startup(function(use)
         requires = "nvim-tree/nvim-web-devicons",
         config = function() require("trouble").setup() end
     }
+    use({
+        "folke/persistence.nvim",
+        event = "BufReadPre",
+        module = "persistence",
+        config = function() require("persistence").setup() end
+    })
     use 'kyazdani42/nvim-web-devicons'
     use 'tpope/vim-fugitive' -- git management
     use 'mbbill/undotree'
@@ -169,6 +173,9 @@ require('packer').startup(function(use)
     use 'RRethy/vim-illuminate' -- highlight same words
     use 'tpope/vim-surround'
 end)
+
+-- vim.cmd[[autocmd BufEnter * if &buftype == 'terminal' | :startinsert | endif]] -- auto enter Terminal mode
+vim.cmd[[autocmd VimEnter * nested if !argc() && !exists("s:std_in") | execute 'lua require("persistence").load()' | endif]]
 
 vim.keymap.set('n', '<leader>tt', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>tf', ':NvimTreeFindFile<CR>', { noremap = true, silent = true })
@@ -407,4 +414,3 @@ dapui.setup({
     windows = { indent = 1 },
 })
 require("nvim-dap-virtual-text").setup()
-
