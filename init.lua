@@ -164,6 +164,7 @@ require('packer').startup(function(use)
         module = "persistence",
         config = function() require("persistence").setup() end
     })
+    use 'nvim-telescope/telescope-ui-select.nvim'
     use 'kyazdani42/nvim-web-devicons'
     use 'tpope/vim-fugitive' -- git management
     use 'mbbill/undotree'
@@ -197,6 +198,13 @@ vim.keymap.set('n', '<leader>sc', telescope.commands)
 vim.keymap.set('n', '<leader>sh', telescope.command_history)
 vim.keymap.set('n', '<leader>sm', telescope.keymaps)
 vim.keymap.set('n', '<leader>st', telescope.help_tags, {})
+
+require("telescope").setup {
+    extensions = {
+        ["ui-select"] = { require("telescope.themes").get_dropdown { } }
+    }
+}
+require("telescope").load_extension("ui-select")
 
 require('nvim-treesitter.configs').setup {
     ensure_installed = {
