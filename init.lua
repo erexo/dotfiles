@@ -40,6 +40,9 @@ vim.opt.updatetime = 50
 -- maps
 vim.g.mapleader = ' '
 
+vim.keymap.set({'n', 'x', 'i'}, '<C-a>', '<cmd>write<CR>')
+vim.keymap.set({'n', 'x', 'i'}, '<C-q>', '<cmd>quit<CR>')
+
 vim.keymap.set('n', '<C-d>', '<C-d>zz') -- center screen after move
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
 vim.keymap.set('n', '<leader>o', 'o<C-c>cc') -- empty line
@@ -77,10 +80,15 @@ vim.keymap.set('n', '<leader>f', vim.lsp.buf.format)
 vim.keymap.set('n', '<leader>gs', vim.cmd.Git)
 vim.keymap.set('n', '<leader>gd', '<cmd>Git diff<CR>', { noremap = true, silent = true})
 vim.keymap.set('n', '<leader>gl', '<cmd>Git log<CR>', { noremap = true, silent = true})
-vim.keymap.set('n', '<leader>gb', '<cmd>Git blame<CR>', { noremap = true, silent = true})
+vim.keymap.set('n', '<leader>gB', '<cmd>Git blame<CR>', { noremap = true, silent = true})
 vim.keymap.set('n', '<leader>gc', '<cmd>Git commit<CR>', { noremap = true, silent = true})
 vim.keymap.set('n', '<leader>gp', '<cmd>Git push<CR>', { noremap = true, silent = true})
 vim.keymap.set('n', '<leader>ga', '<cmd>Git show<CR>', { noremap = true, silent = true})
+vim.keymap.set('n', '<leader>gb', '<cmd>Gitsigns blame_line<CR>', { noremap = true, silent = true})
+vim.keymap.set('n', '<leader>gh', '<cmd>Gitsigns preview_hunk<CR>', { noremap = true, silent = true})
+vim.keymap.set('n', '<leader>gn', '<cmd>Gitsigns next_hunk<CR>', { noremap = true, silent = true})
+vim.keymap.set('n', '<leader>gN', '<cmd>Gitsigns prev_hunk<CR>', { noremap = true, silent = true})
+
 vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle) -- undotree
 
 local diagnostics_active = true
@@ -164,6 +172,12 @@ require('packer').startup(function(use)
         module = "persistence",
         config = function() require("persistence").setup() end
     })
+    use {
+        'lewis6991/gitsigns.nvim',
+        config = function()
+            require('gitsigns').setup()
+        end
+    }
     use 'nvim-telescope/telescope-ui-select.nvim'
     use 'kyazdani42/nvim-web-devicons'
     use 'tpope/vim-fugitive' -- git management
@@ -186,7 +200,6 @@ vim.keymap.set('n', '<leader>tr', ':TroubleToggle<CR>', { noremap = true, silent
 local telescope = require('telescope.builtin')
 vim.keymap.set({'n', 'v'}, '<leader>rf', telescope.lsp_references)
 vim.keymap.set({'n', 'v'}, '<leader>ds', telescope.lsp_document_symbols)
-vim.keymap.set({'n', 'v'}, '<leader>ws', telescope.lsp_dynamic_workspace_symbols)
 vim.keymap.set('n', '<leader>sf', telescope.find_files)
 vim.keymap.set('n', '<leader>sg', telescope.live_grep)
 vim.keymap.set('n', '<leader>sG', function()
