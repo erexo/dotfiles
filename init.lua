@@ -1,5 +1,5 @@
 --[[
-~/.config/nvim/init.lua
+~f.config/nvim/init.lua
 %userprofile%\AppData\Local\nvim\init.lua
 
 git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
@@ -13,13 +13,14 @@ unzip -q codelldb-x86_64-linux.vsix -d ~/lldb
 vim.opt.number = true
 vim.opt.relativenumber = true
 
-vim.opt.tabstop = 4
+vim.opt.tabstop = 5
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 vim.opt.smartindent = true
 vim.opt.showmode = false
 vim.opt.wrap = false
+vim.opt.ignorecase = true
 
 vim.opt.swapfile = false
 vim.opt.backup = false
@@ -40,13 +41,16 @@ vim.opt.updatetime = 50
 -- maps
 vim.g.mapleader = ' '
 
-vim.keymap.set({'n', 'x', 'i'}, '<C-a>', '<cmd>write<CR>')
-vim.keymap.set({'n', 'x', 'i'}, '<C-q>', '<cmd>quit<CR>')
+vim.keymap.set({'n', 'x', 'i'}, '<C-s>', '<cmd>write<CR>')
+vim.keymap.set({'n', 'x', 'i'}, '<C-q>', '<cmd>quitall<CR>')
+vim.keymap.set({'n', 'x'}, '<leader>q', '<cmd>quit<CR>')
 
 vim.keymap.set('n', '<C-d>', '<C-d>zz') -- center screen after move
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
-vim.keymap.set('n', '<leader>o', 'o<C-c>cc') -- empty line
-vim.keymap.set('n', '<leader>O', 'O<C-c>cc')
+vim.keymap.set('n', '<leader>o', 'o<C-c>') -- empty line
+vim.keymap.set('n', '<leader>O', 'O<C-c>')
+vim.keymap.set('n', 'o', 'o<C-c>"_cc')
+vim.keymap.set('n', 'O', 'O<C-c>"_cc')
 vim.keymap.set('n', 'J', 'mzJ`z') -- keep cursor pos while J
 vim.keymap.set('x', '<leader>y', [["+y]]) -- copy to system clipboard
 vim.keymap.set('x', '<leader>Y', [["+Y]])
@@ -61,6 +65,12 @@ vim.keymap.set('i', '<C-h>', '<C-o>b') -- move by word on hl
 vim.keymap.set('i', '<C-l>', '<C-o>w')
 vim.keymap.set({'n', 'x'}, '<C-h>', 'b')
 vim.keymap.set({'n', 'x'}, '<C-l>', 'w')
+vim.keymap.set({'n', 'x', 'i'}, '<A-Left>', '<C-o>') -- navigate buffers
+vim.keymap.set({'n', 'x', 'i'}, '<A-Right>', '<C-i>')
+vim.keymap.set('n', '<C-w>v', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.find_files()<CR>') -- open windows
+vim.keymap.set('n', '<C-w>s', '<C-w>s<C-w>w<cmd>lua require\'telescope.builtin\'.find_files()<CR>')
+vim.keymap.set('n', '<C-w><leader>v', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.live_grep()<CR>')
+vim.keymap.set('n', '<C-w><leader>s', '<C-w>s<C-w>w<cmd>lua require\'telescope.builtin\'.live_grep()<CR>')
 
 --> lsp
 vim.keymap.set('n', '<leader>do', '<cmd>lua vim.diagnostic.open_float()<CR>', { noremap = true, silent = true })
@@ -202,15 +212,14 @@ vim.keymap.set({'n', 'v'}, '<leader>rf', telescope.lsp_references)
 vim.keymap.set({'n', 'v'}, '<leader>ds', telescope.lsp_document_symbols)
 vim.keymap.set('n', '<leader>sf', telescope.find_files)
 vim.keymap.set('n', '<leader>sg', telescope.live_grep)
+vim.keymap.set('n', '<leader>s<leader>g', telescope.grep_string)
 vim.keymap.set('n', '<leader>sG', function()
     telescope.grep_string({ search = vim.fn.input("Grep > ") }) -- ripgrep required
 end)
-vim.keymap.set('n', '<leader>sb', ':Telescope buffers previewer=false<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>b', ':Telescope buffers previewer=false<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>m', ':Telescope oldfiles previewer=false<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>sc', telescope.commands)
-vim.keymap.set('n', '<leader>sh', telescope.command_history)
-vim.keymap.set('n', '<leader>sm', telescope.keymaps)
-vim.keymap.set('n', '<leader>st', telescope.help_tags, {})
+vim.keymap.set('n', '<leader>n', telescope.keymaps)
+vim.keymap.set('n', '<leader>N', telescope.command_history)
 
 require("telescope").setup {
     extensions = {
