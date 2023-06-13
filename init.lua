@@ -1,5 +1,5 @@
 --[[
-~f.config/nvim/init.lua
+~/.config/nvim/init.lua
 %userprofile%\AppData\Local\nvim\init.lua
 
 git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
@@ -21,7 +21,7 @@ vim.opt.smartindent = true
 vim.opt.showmode = false
 vim.opt.wrap = false
 vim.opt.ignorecase = true
-
+vim.opt.smartcase = true
 vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
@@ -32,7 +32,7 @@ vim.opt.incsearch = true
 
 vim.opt.termguicolors = true
 
-vim.opt.scrolloff = 8
+vim.opt.scrolloff = 4
 vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
@@ -40,10 +40,15 @@ vim.opt.updatetime = 50
 
 -- maps
 vim.g.mapleader = ' '
+vim.keymap.set({'n', 'x'}, 'c', '"_c') -- don't yank on 'c'
+vim.keymap.set({'n', 'x'}, 'd', '"_d') -- don't yank on 'd'
 
 vim.keymap.set({'n', 'x', 'i'}, '<C-s>', '<cmd>write<CR>')
-vim.keymap.set({'n', 'x', 'i'}, '<C-q>', '<cmd>quitall<CR>')
+vim.keymap.set({'n', 'x', 'i', 't'}, '<C-q>', '<cmd>quitall<CR>')
 vim.keymap.set({'n', 'x'}, '<leader>q', '<cmd>quit<CR>')
+vim.keymap.set({'n', 'x'}, '<leader>Q', '<cmd>tabclose<CR>')
+vim.keymap.set('t', '<Esc>', '<cmd>quit<CR>') -- exit terminal
+vim.keymap.set('t', '<C-n>', '<C-\\><C-n>') -- escape terminal
 
 vim.keymap.set('n', '<C-d>', '<C-d>zz') -- center screen after move
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
@@ -60,17 +65,12 @@ vim.keymap.set('v', '<', '<gv') -- keep selection while indenting
 vim.keymap.set('v', '>', '>gv')
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv") -- move selected up/down
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
-vim.keymap.set('t', '<Esc>', '<C-\\><C-n><C-w>c') -- exit terminal
 vim.keymap.set('i', '<C-h>', '<C-o>b') -- move by word on hl
 vim.keymap.set('i', '<C-l>', '<C-o>w')
 vim.keymap.set({'n', 'x'}, '<C-h>', 'b')
 vim.keymap.set({'n', 'x'}, '<C-l>', 'w')
 vim.keymap.set({'n', 'x', 'i'}, '<A-Left>', '<C-o>') -- navigate buffers
 vim.keymap.set({'n', 'x', 'i'}, '<A-Right>', '<C-i>')
-vim.keymap.set('n', '<C-w>v', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.find_files()<CR>') -- open windows
-vim.keymap.set('n', '<C-w>s', '<C-w>s<C-w>w<cmd>lua require\'telescope.builtin\'.find_files()<CR>')
-vim.keymap.set('n', '<C-w><leader>v', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.live_grep()<CR>')
-vim.keymap.set('n', '<C-w><leader>s', '<C-w>s<C-w>w<cmd>lua require\'telescope.builtin\'.live_grep()<CR>')
 
 --> lsp
 vim.keymap.set('n', '<leader>do', '<cmd>lua vim.diagnostic.open_float()<CR>', { noremap = true, silent = true })
@@ -88,7 +88,8 @@ vim.keymap.set('n', '<leader>f', vim.lsp.buf.format)
 
 --> git
 vim.keymap.set('n', '<leader>gs', vim.cmd.Git)
-vim.keymap.set('n', '<leader>gd', '<cmd>Git diff<CR>', { noremap = true, silent = true})
+vim.keymap.set('n', '<leader>gd', '<cmd>DiffviewOpen<CR>', { noremap = true, silent = true})
+vim.keymap.set('n', '<leader>gf', '<cmd>DiffviewFileHistory %<CR>', { noremap = true, silent = true})
 vim.keymap.set('n', '<leader>gl', '<cmd>Git log<CR>', { noremap = true, silent = true})
 vim.keymap.set('n', '<leader>gB', '<cmd>Git blame<CR>', { noremap = true, silent = true})
 vim.keymap.set('n', '<leader>gc', '<cmd>Git commit<CR>', { noremap = true, silent = true})
@@ -162,14 +163,17 @@ require('packer').startup(function(use)
     }
     use {
         "windwp/nvim-autopairs",
-        config = function() require("nvim-autopairs").setup {} end
+        config = function() require("nvim-autopairs").setup() end
     }
     use {
-        's1n7ax/nvim-terminal',
+        "akinsho/toggleterm.nvim",
         config = function()
-            vim.o.hidden = true
-            require('nvim-terminal').setup()
-        end,
+            require("toggleterm").setup {
+                start_in_insert = true,
+                insert_mappings = true,
+                terminal_mappings = true,
+            }
+        end
     }
     use {
         "folke/trouble.nvim",
@@ -184,13 +188,21 @@ require('packer').startup(function(use)
     })
     use {
         'lewis6991/gitsigns.nvim',
+        config = function() require('gitsigns').setup() end
+    }
+    use {
+        "folke/which-key.nvim",
         config = function()
-            require('gitsigns').setup()
+            vim.o.timeout = true
+            vim.o.timeoutlen = 300
+            require("which-key").setup()
         end
     }
     use 'nvim-telescope/telescope-ui-select.nvim'
     use 'kyazdani42/nvim-web-devicons'
     use 'tpope/vim-fugitive' -- git management
+    use 'nvim-lua/plenary.nvim'
+    use 'sindrets/diffview.nvim'
     use 'mbbill/undotree'
     use 'mg979/vim-visual-multi' -- multicursor
     use 'nvim-tree/nvim-tree.lua'
@@ -199,29 +211,35 @@ require('packer').startup(function(use)
     use 'tpope/vim-surround'
 end)
 
--- vim.cmd[[autocmd BufEnter * if &buftype == 'terminal' | :startinsert | endif]] -- auto enter Terminal mode
 vim.cmd[[autocmd VimEnter * nested if !argc() && !exists("s:std_in") | execute 'lua require("persistence").load()' | endif]]
 
 vim.keymap.set('n', '<leader>tt', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>tf', ':NvimTreeFindFile<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>tc', require'nvim-tree.api'.fs.create)
 vim.keymap.set('n', '<leader>tr', ':TroubleToggle<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>tw', ':WhichKey<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>;', ':ToggleTerm direction=float<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>:', ':ToggleTerm direction=horizontal<CR>', { noremap = true, silent = true })
 
 local telescope = require('telescope.builtin')
 vim.keymap.set({'n', 'v'}, '<leader>rf', telescope.lsp_references)
 vim.keymap.set({'n', 'v'}, '<leader>ds', telescope.lsp_document_symbols)
-vim.keymap.set('n', '<leader>sf', telescope.find_files)
-vim.keymap.set('n', '<leader>sg', telescope.live_grep)
-vim.keymap.set('n', '<leader>s<leader>g', telescope.grep_string)
-vim.keymap.set('n', '<leader>sG', function()
-    telescope.grep_string({ search = vim.fn.input("Grep > ") }) -- ripgrep required
-end)
+vim.keymap.set('n', '<leader>a', telescope.find_files)
+vim.keymap.set('n', '<leader>A', telescope.resume)
+vim.keymap.set('n', '<leader>s', telescope.live_grep)
+vim.keymap.set('n', '<leader>S', telescope.grep_string)
 vim.keymap.set('n', '<leader>b', ':Telescope buffers previewer=false<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>m', ':Telescope oldfiles previewer=false<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>n', telescope.keymaps)
 vim.keymap.set('n', '<leader>N', telescope.command_history)
+vim.keymap.set('n', '<C-w>a', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.find_files()<CR>') -- open windows
+vim.keymap.set('n', '<C-w>A', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.resume()<CR>') -- open windows
+vim.keymap.set('n', '<C-w>s', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.live_grep()<CR>')
+vim.keymap.set('n', '<C-w>S', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.grep_string()<CR>')
 
 require("telescope").setup {
+    defaults = {
+        prompt_prefix = "   ",
+    },
     extensions = {
         ["ui-select"] = { require("telescope.themes").get_dropdown { } }
     }
@@ -233,8 +251,8 @@ require('nvim-treesitter.configs').setup {
         'lua', 'help', 'vim',
         'rust',
         'go',
-        -- 'c', 'cpp',
-        -- 'c_sharp'
+        'c', 'cpp',
+        'c_sharp'
     },
     highlight = { enable = true },
     diagnostics = { enabled = true },
@@ -257,8 +275,9 @@ lsp.preset("recommended")
 lsp.ensure_installed({
     'rust_analyzer',
     'gopls',
-    -- 'omnisharp',
+    'omnisharp',
 })
+-- lsp.skip_server_setup({'rust_analyzer'})
 local cmp = require('cmp')
 local cmp_select = {behavior = cmp.SelectBehavior.Select}
 local cmp_mappings = lsp.defaults.cmp_mappings({
@@ -386,6 +405,11 @@ dap.adapters.go = function(callback, config)
     end,
     100)
 end
+dap.adapters.coreclr = {
+  type = 'executable',
+  command = os.getenv('HOME') .. '/dotnet/netcoredbg/netcoredbg',
+  args = {'--interpreter=vscode'}
+}
 dap.configurations.rust = {
     {
         type = "lldb",
@@ -402,6 +426,16 @@ dap.configurations.go = {
         request = "launch",
         program = "${file}"
     }
+}
+dap.configurations.cs = {
+  {
+    type = "coreclr",
+    name = "launch - netcoredbg",
+    request = "launch",
+    program = function()
+        return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/bin/Debug/', 'file')
+    end,
+  },
 }
 dapui.setup({
     icons = { expanded = "▾", collapsed = "▸" },
