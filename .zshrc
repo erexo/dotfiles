@@ -6,8 +6,8 @@ alias grep.='grep -Rin'
 alias find.='find -iname'
 alias vim='nvim'
 alias v='nvim -c "Telescope find_files"'
-alias vim.edit='nvim ~/.config/nvim/init.lua'
-alias zsh.edit='nvim ~/.zshrc'
+alias vim.edit='nvim --cmd ":cd ~/.config/nvim/" -c ":e init.lua"'
+alias zsh.edit='nvim --cmd ":cd ~/" ~/.zshrc'
 
 DISABLE_AUTO_UPDATE="true"
 
