@@ -45,11 +45,6 @@ local keymap = vim.keymap.set
 local opts = { noremap = true, silent = true }
 vim.g.mapleader = ' '
 
-keymap({'n', 'x'}, 'c', '"_c') -- don't yank on 'c'
-keymap({'n', 'x'}, 'd', '"_d') -- don't yank on 'd'
-keymap('v', 'y', 'ygv<Esc>') -- don't change pos after yank
-
-
 keymap({'n', 'x', 'i'}, '<C-s>', '<cmd>write<CR>')
 keymap({'n', 'x', 'i'}, '<C-S>', '<cmd>wa<CR>')
 keymap({'n', 'x', 'i', 't'}, '<C-q>', '<cmd>quitall<CR>')
@@ -57,6 +52,16 @@ keymap({'n', 'x'}, '<leader>q', '<cmd>quit<CR>')
 keymap({'n', 'x'}, '<leader>Q', '<cmd>tabclose<CR>')
 keymap('t', '<Esc>', '<cmd>quit<CR>') -- exit terminal
 keymap('t', '<C-n>', '<C-\\><C-n>') -- escape terminal
+
+keymap({'n', 'x'}, 'c', '"_c') -- don't yank on 'c'
+keymap({'n', 'x'}, 'd', '"_d') -- don't yank on 'd'
+keymap('x', 'y', 'ygv<Esc>') -- don't change pos after yank
+keymap('x', '<leader>y', '"+ygv<Esc><cmd>let @"=@0<CR>') -- copy to system clipboard
+keymap('x', '<leader>Y', '"+Y<cmd>let @"=@0<CR>')
+keymap({'n', 'x'}, '<leader>p', '"+p') -- paste from system clipboard
+keymap({'n', 'x'}, '<leader>P', '"+P')
+keymap('x', 'p', '"_dp') -- paste without yanking
+keymap('x', 'P', '"_dP')
 
 keymap('n', '<C-d>', '<C-d>zz') -- center screen after move
 keymap('n', '<C-u>', '<C-u>zz')
@@ -68,10 +73,6 @@ keymap('n', 'J', 'mzJ`z') -- keep cursor pos while J
 keymap('n', '<C-b>', '<cmd>%bd<bar>e#<bar>bd#<CR>\'"', opts) -- close all buffers
 keymap('n', '_', '<cmd>bprev<CR>', opts)
 keymap('n', '+', '<cmd>bnext<CR>', opts)
-keymap('x', '<leader>y', [["+y]]) -- copy to system clipboard
-keymap('x', '<leader>Y', [["+Y]])
-keymap('v', 'p', '"_dp') -- paste without yanking
-keymap('v', 'P', '"_dP')
 keymap('v', '<', '<gv') -- keep selection while indenting
 keymap('v', '>', '>gv')
 keymap('v', 'J', ":m '>+1<CR>gv=gv") -- move selected up/down
@@ -288,7 +289,7 @@ require("telescope").load_extension("ui-select")
 
 require('nvim-treesitter.configs').setup {
     ensure_installed = {
-        'lua', 'help', 'vim',
+        'lua', 'vim',
         'rust',
         'go',
         'c', 'cpp',
