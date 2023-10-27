@@ -95,7 +95,7 @@ keymap('n', '<leader>df', vim.lsp.buf.definition)
 keymap('n', '<leader>ca', vim.lsp.buf.code_action)
 keymap('n', 'gI', vim.lsp.buf.implementation)
 keymap('n', 'K', vim.lsp.buf.hover)
-keymap('n', '<C-k>', vim.lsp.buf.signature_help)
+keymap({'n', 'i'}, '<C-k>', vim.lsp.buf.signature_help)
 keymap('n', '<leader>f', vim.lsp.buf.format)
 
 --> git
@@ -161,6 +161,7 @@ require('packer').startup(function(use)
             {'saadparwaiz1/cmp_luasnip'},
             {'hrsh7th/cmp-nvim-lsp'},
             {'hrsh7th/cmp-nvim-lua'},
+            {'hrsh7th/cmp-nvim-lsp-signature-help'},
             {'onsails/lspkind.nvim'},
             -- Snippets
             {'L3MON4D3/LuaSnip'},
@@ -318,17 +319,15 @@ lsp.ensure_installed({
     'gopls',
 })
 -- lsp.skip_server_setup({'rust_analyzer'})
-local cmp = require('cmp')
-local cmp_select = {behavior = cmp.SelectBehavior.Select}
-local cmp_mappings = lsp.defaults.cmp_mappings({
-    ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-    ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-})
-cmp_mappings['<Tab>'] = nil
-cmp_mappings['<S-Tab>'] = nil
 local lspkind = require('lspkind')
 lsp.setup_nvim_cmp({
-    mapping = cmp_mappings,
+    sources = {
+        { name = 'nvim_buffer' },
+        { name = 'nvim_path' },
+        { name = 'nvim_lsp' },
+        { name = 'nvim_lua' },
+        { name = 'nvim_lsp_signature_help' }
+    },
     formatting = {
         format = lspkind.cmp_format({
             mode = 'symbol',
