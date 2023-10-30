@@ -26,7 +26,7 @@ vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.opt.undofile = true
-vim.opt.whichwrap="b,s,<,>,[,]"
+vim.opt.whichwrap = "b,s,<,>,[,]"
 
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
@@ -45,44 +45,44 @@ local keymap = vim.keymap.set
 local opts = { noremap = true, silent = true }
 vim.g.mapleader = ' '
 
-keymap({'n', 'x', 'i'}, '<C-s>', '<cmd>write<CR>')
-keymap({'n', 'x', 'i'}, '<C-S>', '<cmd>wa<CR>')
-keymap({'n', 'x', 'i', 't'}, '<C-q>', '<cmd>quitall<CR>')
-keymap({'n', 'x'}, '<leader>q', '<cmd>quit<CR>')
-keymap({'n', 'x'}, '<leader>Q', '<cmd>tabclose<CR>')
-keymap('t', '<Esc>', '<cmd>quit<CR>') -- exit terminal
-keymap('t', '<C-n>', '<C-\\><C-n>') -- escape terminal
+keymap({ 'n', 'x', 'i' }, '<C-s>', '<cmd>write<CR>')
+keymap({ 'n', 'x', 'i' }, '<C-S>', '<cmd>wa<CR>')
+keymap({ 'n', 'x', 'i', 't' }, '<C-q>', '<cmd>quitall<CR>')
+keymap({ 'n', 'x' }, '<leader>q', '<cmd>quit<CR>')
+keymap({ 'n', 'x' }, '<leader>Q', '<cmd>tabclose<CR>')
+keymap('t', '<Esc>', '<cmd>quit<CR>')                    -- exit terminal
+keymap('t', '<C-n>', '<C-\\><C-n>')                      -- escape terminal
 
-keymap({'n', 'x'}, 'c', '"_c') -- don't yank on 'c'
-keymap({'n', 'x'}, 'd', '"_d') -- don't yank on 'd'
-keymap('x', 'y', 'ygv<Esc>') -- don't change pos after yank
+keymap({ 'n', 'x' }, 'c', '"_c')                         -- don't yank on 'c'
+keymap({ 'n', 'x' }, 'd', '"_d')                         -- don't yank on 'd'
+keymap('x', 'y', 'ygv<Esc>')                             -- don't change pos after yank
 keymap('x', '<leader>y', '"+ygv<Esc><cmd>let @"=@0<CR>') -- copy to system clipboard
 keymap('x', '<leader>Y', '"+Y<cmd>let @"=@0<CR>')
-keymap({'n', 'x'}, '<leader>p', '"+p') -- paste from system clipboard
-keymap({'n', 'x'}, '<leader>P', '"+P')
-keymap('x', 'p', '"_dp') -- paste without yanking
+keymap({ 'n', 'x' }, '<leader>p', '"+p')                 -- paste from system clipboard
+keymap({ 'n', 'x' }, '<leader>P', '"+P')
+keymap('x', 'p', '"_dp')                                 -- paste without yanking
 keymap('x', 'P', '"_dP')
 
-keymap('n', '<C-d>', '<C-d>zz') -- center screen after move
+keymap('n', '<C-d>', '<C-d>zz')    -- center screen after move
 keymap('n', '<C-u>', '<C-u>zz')
 keymap('n', '<leader>o', 'o<C-c>') -- empty line
 keymap('n', '<leader>O', 'O<C-c>')
 keymap('n', 'o', 'o<C-c>"_cc')
 keymap('n', 'O', 'O<C-c>"_cc')
-keymap('n', 'J', 'mzJ`z') -- keep cursor pos while J
+keymap('n', 'J', 'mzJ`z')                                    -- keep cursor pos while J
 keymap('n', '<C-b>', '<cmd>%bd<bar>e#<bar>bd#<CR>\'"', opts) -- close all buffers
 keymap('n', '_', '<cmd>bprev<CR>', opts)
 keymap('n', '+', '<cmd>bnext<CR>', opts)
-keymap('v', '<', '<gv') -- keep selection while indenting
+keymap('v', '<', '<gv')              -- keep selection while indenting
 keymap('v', '>', '>gv')
 keymap('v', 'J', ":m '>+1<CR>gv=gv") -- move selected up/down
 keymap('v', 'K', ":m '<-2<CR>gv=gv")
-keymap('i', '<C-h>', '<C-o>b') -- move by word on hl
+keymap('i', '<C-h>', '<C-o>b')       -- move by word on hl
 keymap('i', '<C-l>', '<C-o>w')
-keymap({'n', 'x'}, '<C-h>', 'b')
-keymap({'n', 'x'}, '<C-l>', 'w')
-keymap({'n', 'x', 'i'}, '<A-Left>', '<C-o>') -- navigate buffers
-keymap({'n', 'x', 'i'}, '<A-Right>', '<C-i>')
+keymap({ 'n', 'x' }, '<C-h>', 'b')
+keymap({ 'n', 'x' }, '<C-l>', 'w')
+keymap({ 'n', 'x', 'i' }, '<A-Left>', '<C-o>') -- navigate buffers
+keymap({ 'n', 'x', 'i' }, '<A-Right>', '<C-i>')
 
 --> lsp
 keymap('n', '<leader>do', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
@@ -95,7 +95,7 @@ keymap('n', '<leader>df', vim.lsp.buf.definition)
 keymap('n', '<leader>ca', vim.lsp.buf.code_action)
 keymap('n', 'gI', vim.lsp.buf.implementation)
 keymap('n', 'K', vim.lsp.buf.hover)
-keymap({'n', 'i'}, '<C-k>', vim.lsp.buf.signature_help)
+keymap({ 'n', 'i' }, '<C-k>', vim.lsp.buf.signature_help)
 keymap('n', '<leader>f', vim.lsp.buf.format)
 
 --> git
@@ -138,7 +138,7 @@ require('packer').startup(function(use)
     }
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.0',
-        requires = { {'nvim-lua/plenary.nvim'}, {'kyazdani42/nvim-web-devicons'} }
+        requires = { { 'nvim-lua/plenary.nvim' }, { 'kyazdani42/nvim-web-devicons' } }
     }
     use {
         'nvim-treesitter/nvim-treesitter',
@@ -151,27 +151,27 @@ require('packer').startup(function(use)
         branch = 'v1.x',
         requires = {
             -- LSP Support
-            {'neovim/nvim-lspconfig'},
-            {'williamboman/mason.nvim'},
-            {'williamboman/mason-lspconfig.nvim'},
+            { 'neovim/nvim-lspconfig' },
+            { 'williamboman/mason.nvim' },
+            { 'williamboman/mason-lspconfig.nvim' },
             -- Autocompletion
-            {'hrsh7th/nvim-cmp'},
-            {'hrsh7th/cmp-buffer'},
-            {'hrsh7th/cmp-path'},
-            {'saadparwaiz1/cmp_luasnip'},
-            {'hrsh7th/cmp-nvim-lsp'},
-            {'hrsh7th/cmp-nvim-lua'},
-            {'hrsh7th/cmp-nvim-lsp-signature-help'},
-            {'onsails/lspkind.nvim'},
+            { 'hrsh7th/nvim-cmp' },
+            { 'hrsh7th/cmp-buffer' },
+            { 'hrsh7th/cmp-path' },
+            { 'saadparwaiz1/cmp_luasnip' },
+            { 'hrsh7th/cmp-nvim-lsp' },
+            { 'hrsh7th/cmp-nvim-lua' },
+            { 'hrsh7th/cmp-nvim-lsp-signature-help' },
+            { 'onsails/lspkind.nvim' },
             -- Snippets
-            {'L3MON4D3/LuaSnip'},
-            {'rafamadriz/friendly-snippets'},
+            { 'L3MON4D3/LuaSnip' },
+            { 'rafamadriz/friendly-snippets' },
             -- Debugging
-            {'mfussenegger/nvim-dap'},
-            {'rcarriga/nvim-dap-ui'},
-            {'theHamsta/nvim-dap-virtual-text'},
-            {'simrat39/rust-tools.nvim'},
-            {'leoluz/nvim-dap-go'},
+            { 'mfussenegger/nvim-dap' },
+            { 'rcarriga/nvim-dap-ui' },
+            { 'theHamsta/nvim-dap-virtual-text' },
+            { 'simrat39/rust-tools.nvim' },
+            { 'leoluz/nvim-dap-go' },
         }
     }
     use {
@@ -219,6 +219,17 @@ require('packer').startup(function(use)
             require('crates').setup()
         end
     }
+    use {
+        "nat-418/boole.nvim",
+        config = function()
+            require("boole").setup {
+                mappings = {
+                    increment = '<C-a>',
+                    decrement = '<C-x>'
+                },
+            }
+        end
+    }
     use 'nvim-telescope/telescope-ui-select.nvim'
     use 'kyazdani42/nvim-web-devicons'
     use 'tpope/vim-fugitive' -- git management
@@ -232,7 +243,7 @@ require('packer').startup(function(use)
     use 'tpope/vim-surround'
 end)
 
-vim.cmd[[autocmd VimEnter * nested if !argc() && !exists("s:std_in") | execute 'lua require("persistence").load()' | endif]]
+vim.cmd [[autocmd VimEnter * nested if !argc() && !exists("s:std_in") | execute 'lua require("persistence").load()' | endif]]
 
 keymap('n', '<leader>tt', ':NvimTreeToggle<CR>', opts)
 keymap('n', '<leader>tf', ':NvimTreeFindFile<CR>', opts)
@@ -253,20 +264,20 @@ keymap('n', '<leader>cU', crates.upgrade_all_crates, opts)
 keymap('v', '<leader>cu', crates.upgrade_crates, opts)
 
 local telescope = require('telescope.builtin')
-keymap({'n', 'v'}, '<leader>rf', telescope.lsp_references)
-keymap({'n', 'v'}, '<leader>ds', telescope.lsp_document_symbols)
+keymap({ 'n', 'v' }, '<leader>rf', telescope.lsp_references)
+keymap({ 'n', 'v' }, '<leader>ds', telescope.lsp_document_symbols)
 keymap('n', '<leader>a', telescope.find_files)
 keymap('n', '<leader>A', telescope.resume)
 keymap('n', '<leader>s', telescope.live_grep)
 keymap('n', '<leader>S', telescope.grep_string)
 keymap('v', '<leader>S', function()
-	vim.cmd('noau normal! "vy"')
-	local text = vim.fn.getreg('v')
-	vim.fn.setreg('v', {})
-	text = string.gsub(text, "\n", "")
-	if #text == 0 then
+    vim.cmd('noau normal! "vy"')
+    local text = vim.fn.getreg('v')
+    vim.fn.setreg('v', {})
+    text = string.gsub(text, "\n", "")
+    if #text == 0 then
         text = ''
-	end
+    end
     telescope.live_grep({ default_text = text })
 end, opts)
 keymap('n', '<leader>b', ':Telescope buffers previewer=false<CR>', opts)
@@ -274,7 +285,7 @@ keymap('n', '<leader>m', ':Telescope oldfiles previewer=false<CR>', opts)
 keymap('n', '<leader>n', telescope.keymaps)
 keymap('n', '<leader>N', telescope.command_history)
 keymap('n', '<C-w>a', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.find_files()<CR>') -- open windows
-keymap('n', '<C-w>A', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.resume()<CR>') -- open windows
+keymap('n', '<C-w>A', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.resume()<CR>')     -- open windows
 keymap('n', '<C-w>s', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.live_grep()<CR>')
 keymap('n', '<C-w>S', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.grep_string()<CR>')
 
@@ -283,7 +294,7 @@ require("telescope").setup {
         prompt_prefix = "   ",
     },
     extensions = {
-        ["ui-select"] = { require("telescope.themes").get_dropdown { } }
+        ["ui-select"] = { require("telescope.themes").get_dropdown {} }
     }
 }
 require("telescope").load_extension("ui-select")
@@ -303,13 +314,13 @@ require('nvim-treesitter.configs').setup {
 require('lualine').setup {
     options = {
         theme = 'gruvbox-material',
-        component_separators = { left = '|', right = '|'},
-        section_separators = { left = '', right = ''},
+        component_separators = { left = '|', right = '|' },
+        section_separators = { left = '', right = '' },
     }
 }
 
 require('nvim-tree').setup()
-require('nvim_comment').setup({comment_empty = false})
+require('nvim_comment').setup({ comment_empty = false })
 
 -- lsp configuration
 local lsp = require("lsp-zero")
@@ -333,7 +344,7 @@ lsp.setup_nvim_cmp({
             mode = 'symbol',
             maxwidth = 50,
             ellipsis_char = '...',
-            before = function (entry, vim_item)
+            before = function(entry, vim_item)
                 return vim_item
             end
         })
@@ -349,15 +360,15 @@ local signs = {
 }
 for type, icon in pairs(signs) do
     local hl = "DiagnosticSign" .. type
-    vim.fn.sign_define(hl, {text = icon, texthl = hl, numhl = hl})
+    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-vim.lsp.diagnostic.on_publish_diagnostics, {
-    underline = true,
-    virtual_text = true,
-    signs = true,
-})
+    vim.lsp.diagnostic.on_publish_diagnostics, {
+        underline = true,
+        virtual_text = true,
+        signs = true,
+    })
 local format_sync_grp = vim.api.nvim_create_augroup("FileFormat", {})
 vim.api.nvim_create_autocmd("BufWritePre", {
     pattern = { "*.go" },
@@ -388,27 +399,28 @@ dap.adapters.lldb = function(callback, _)
     local handle
     local pid_or_err
     local opts = {
-        args = {"build"},
+        args = { "build" },
         detached = true
     }
     vim.api.nvim_command('write')
     handle, pid_or_err = vim.loop.spawn("cargo", opts, function(code)
         handle:close()
-        if code ~=0 then
+        if code ~= 0 then
             print('cargo build exited with code', code)
             return
         end
         vim.schedule(
-        function()
-            callback({
-                type = 'server', 
-                port = 13000, 
-                executable = {
-                    command = os.getenv('HOME') .. '/lldb/extension/adapter/codelldb',
-                    args = { '--liblldb', os.getenv('HOME') .. '/lldb/extension/lldb/lib/liblldb.so', '--port', '13000' }
-                }
-            })
-        end)
+            function()
+                callback({
+                    type = 'server',
+                    port = 13000,
+                    executable = {
+                        command = os.getenv('HOME') .. '/lldb/extension/adapter/codelldb',
+                        args = { '--liblldb', os.getenv('HOME') .. '/lldb/extension/lldb/lib/liblldb.so', '--port',
+                            '13000' }
+                    }
+                })
+            end)
     end)
     assert(handle, 'Error running cargo build: ' .. tostring(pid_or_err))
 end
@@ -418,8 +430,8 @@ dap.adapters.go = function(callback, config)
     local pid_or_err
     local port = 38697
     local opts = {
-        stdio = {nil, stdout},
-        args = {"dap", "-l", "127.0.0.1:" .. port},
+        stdio = { nil, stdout },
+        args = { "dap", "-l", "127.0.0.1:" .. port },
         detached = true
     }
     handle, pid_or_err = vim.loop.spawn("dlv", opts, function(code)
@@ -439,15 +451,15 @@ dap.adapters.go = function(callback, config)
         end
     end)
     vim.defer_fn(
-    function()
-        callback({type = "server", host = "127.0.0.1", port = port})
-    end,
-    100)
+        function()
+            callback({ type = "server", host = "127.0.0.1", port = port })
+        end,
+        100)
 end
 dap.adapters.coreclr = {
-  type = 'executable',
-  command = os.getenv('HOME') .. '/dotnet/netcoredbg/netcoredbg',
-  args = {'--interpreter=vscode'}
+    type = 'executable',
+    command = os.getenv('HOME') .. '/dotnet/netcoredbg/netcoredbg',
+    args = { '--interpreter=vscode' }
 }
 dap.configurations.rust = {
     {
@@ -467,14 +479,14 @@ dap.configurations.go = {
     }
 }
 dap.configurations.cs = {
-  {
-    type = "coreclr",
-    name = "launch - netcoredbg",
-    request = "launch",
-    program = function()
-        return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/bin/Debug/', 'file')
-    end,
-  },
+    {
+        type = "coreclr",
+        name = "launch - netcoredbg",
+        request = "launch",
+        program = function()
+            return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/bin/Debug/', 'file')
+        end,
+    },
 }
 dapui.setup({
     icons = { expanded = "▾", collapsed = "▸" },
@@ -488,10 +500,10 @@ dapui.setup({
     layouts = {
         {
             elements = {
-                { id = "scopes", size = 0.25 },
+                { id = "scopes",      size = 0.25 },
                 { id = "breakpoints", size = 0.25 },
-                { id = "stacks", size = 0.25 },
-                { id = "watches", size = 0.25 },
+                { id = "stacks",      size = 0.25 },
+                { id = "watches",     size = 0.25 },
             },
             size = 40,
             position = "right",
