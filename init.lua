@@ -40,6 +40,9 @@ vim.opt.isfname:append("@-@")
 
 vim.opt.updatetime = 50
 
+vim.opt.title = true
+vim.opt.titlestring = '%m%r'..vim.fn.fnamemodify(vim.fn.getcwd(), ':t').. ' (%t)'
+
 -- maps
 local keymap = vim.keymap.set
 local opts = { noremap = true, silent = true }
