@@ -41,7 +41,7 @@ vim.opt.isfname:append("@-@")
 vim.opt.updatetime = 50
 
 vim.opt.title = true
-vim.opt.titlestring = '%m%r'..vim.fn.fnamemodify(vim.fn.getcwd(), ':t').. ' (%t)'
+vim.opt.titlestring = '%m%r' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t') .. ' (%t)'
 
 -- maps
 local keymap = vim.keymap.set
@@ -142,10 +142,10 @@ require('packer').startup(function(use)
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.0',
         requires = {
-            {'nvim-lua/plenary.nvim'},
-            {'kyazdani42/nvim-web-devicons'},
-            {'nvim-telescope/telescope-ui-select.nvim'},
-            {'molecule-man/telescope-menufacture'}
+            { 'nvim-lua/plenary.nvim' },
+            { 'kyazdani42/nvim-web-devicons' },
+            { 'nvim-telescope/telescope-ui-select.nvim' },
+            { 'molecule-man/telescope-menufacture' }
         },
         config = function()
             local telescope = require('telescope')
@@ -154,7 +154,7 @@ require('packer').startup(function(use)
                     prompt_prefix = "   ",
                 },
                 extensions = {
-                    ["ui-select"] = { require("telescope.themes").get_dropdown { } },
+                    ["ui-select"] = { require("telescope.themes").get_dropdown {} },
                     menufacture = {
                         mappings = {
                             main_menu = { [{ 'i', 'n' }] = '<C-d>' },
@@ -290,8 +290,8 @@ keymap('v', '<leader>cu', crates.upgrade_crates, opts)
 
 local telescope = require('telescope')
 local telescopebin = require('telescope.builtin')
-keymap({'n', 'v'}, '<leader>rf', telescopebin.lsp_references)
-keymap({'n', 'v'}, '<leader>ds', telescopebin.lsp_document_symbols)
+keymap({ 'n', 'v' }, '<leader>rf', telescopebin.lsp_references)
+keymap({ 'n', 'v' }, '<leader>ds', telescopebin.lsp_document_symbols)
 keymap('n', '<leader>a', telescope.extensions.menufacture.find_files)
 keymap('n', '<leader>A', telescopebin.resume)
 keymap('n', '<leader>s', telescope.extensions.menufacture.live_grep)
@@ -303,7 +303,7 @@ keymap('v', '<leader>S', function()
     text = string.gsub(text, "\n", "")
     if #text == 0 then
         text = ''
-	end
+    end
     telescope.extensions.menufacture.live_grep({ default_text = text })
 end, opts)
 keymap('n', '<leader>b', ':Telescope buffers previewer=false<CR>', opts)
@@ -311,7 +311,7 @@ keymap('n', '<leader>m', ':Telescope oldfiles previewer=false<CR>', opts)
 keymap('n', '<leader>n', telescopebin.keymaps)
 keymap('n', '<leader>N', telescopebin.command_history)
 keymap('n', '<C-w>a', '<C-w>v<C-w>w<cmd>lua require\'telescope\'.extensions.menufacture.find_files()<CR>') -- open windows
-keymap('n', '<C-w>A', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.resume()<CR>') -- open windows
+keymap('n', '<C-w>A', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.resume()<CR>')                    -- open windows
 keymap('n', '<C-w>s', '<C-w>v<C-w>w<cmd>lua require\'telescope\'.extensions.menufacture.live_grep()<CR>')
 keymap('n', '<C-w>S', '<C-w>v<C-w>w<cmd>lua require\'telescope\'.extensions.menufacture.grep_string()<CR>')
 
