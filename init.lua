@@ -68,6 +68,8 @@ keymap('x', 'P', '"_dP')
 
 keymap('n', '<C-d>', '<C-d>zz')    -- center screen after move
 keymap('n', '<C-u>', '<C-u>zz')
+keymap({'n', 'x'}, '<leader>[', '10[{') -- move to start/end of group
+keymap({'n', 'x'}, '<leader>]', '10]}')
 keymap('n', '<leader>o', 'o<C-c>') -- empty line
 keymap('n', '<leader>O', 'O<C-c>')
 keymap('n', 'o', 'o<C-c>"_cc')
@@ -140,7 +142,7 @@ require('packer').startup(function(use)
         requires = { 'kyazdani42/nvim-web-devicons', opt = true }
     }
     use {
-        'nvim-telescope/telescope.nvim', tag = '0.1.0',
+        'nvim-telescope/telescope.nvim',
         requires = {
             { 'nvim-lua/plenary.nvim' },
             { 'kyazdani42/nvim-web-devicons' },
@@ -157,7 +159,9 @@ require('packer').startup(function(use)
                     ["ui-select"] = { require("telescope.themes").get_dropdown {} },
                     menufacture = {
                         mappings = {
-                            main_menu = { [{ 'i', 'n' }] = '<C-d>' },
+                            main_menu = { [{ 'i', 'n' }] = '<C-^>' },
+                            search_in_directory = { [{ 'i', 'n' }] = '<C-r>' },
+                            search_by_filename = { [{ 'i', 'n' }] = '<C-t>' },
                         },
                     },
                 }
