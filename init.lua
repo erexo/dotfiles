@@ -66,11 +66,11 @@ keymap({ 'n', 'x' }, '<leader>P', '"+P')
 keymap('x', 'p', '"_dp')                                 -- paste without yanking
 keymap('x', 'P', '"_dP')
 
-keymap('n', '<C-d>', '<C-d>zz')    -- center screen after move
+keymap('n', '<C-d>', '<C-d>zz')           -- center screen after move
 keymap('n', '<C-u>', '<C-u>zz')
-keymap({'n', 'x'}, '<leader>[', '10[{') -- move to start/end of group
-keymap({'n', 'x'}, '<leader>]', '10]}')
-keymap('n', '<leader>o', 'o<C-c>') -- empty line
+keymap({ 'n', 'x' }, '<leader>[', '10[{') -- move to start/end of group
+keymap({ 'n', 'x' }, '<leader>]', '10]}')
+keymap('n', '<leader>o', 'o<C-c>')        -- empty line
 keymap('n', '<leader>O', 'O<C-c>')
 keymap('n', 'o', 'o<C-c>"_cc')
 keymap('n', 'O', 'O<C-c>"_cc')
@@ -98,7 +98,6 @@ keymap('n', '<leader>rn', vim.lsp.buf.rename)
 keymap('n', '<leader>D', vim.lsp.buf.type_definition)
 keymap('n', '<leader>df', vim.lsp.buf.definition)
 keymap('n', '<leader>ca', vim.lsp.buf.code_action)
-keymap('n', 'gI', vim.lsp.buf.implementation)
 keymap('n', 'K', vim.lsp.buf.hover)
 keymap({ 'n', 'i' }, '<C-k>', vim.lsp.buf.signature_help)
 keymap('n', '<leader>f', vim.lsp.buf.format)
@@ -295,6 +294,7 @@ keymap('v', '<leader>cu', crates.upgrade_crates, opts)
 local telescope = require('telescope')
 local telescopebin = require('telescope.builtin')
 keymap({ 'n', 'v' }, '<leader>rf', telescopebin.lsp_references)
+keymap({ 'n', 'v' }, '<leader>ef', telescopebin.lsp_implementations)
 keymap({ 'n', 'v' }, '<leader>ds', telescopebin.lsp_document_symbols)
 keymap('n', '<leader>a', telescope.extensions.menufacture.find_files)
 keymap('n', '<leader>A', telescopebin.resume)
