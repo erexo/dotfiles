@@ -65,12 +65,16 @@ keymap({ 'n', 'x' }, '<leader>p', '"+p')                 -- paste from system cl
 keymap({ 'n', 'x' }, '<leader>P', '"+P')
 keymap('x', 'p', '"_dp')                                 -- paste without yanking
 keymap('x', 'P', '"_dP')
+keymap('i', '<C-H>', '<C-W>')                            -- backspace/delete
+keymap('n', '<C-H>', 'db')
+keymap('i', '<C-Del>', '<space><Esc>ce')
+keymap('n', '<C-Del>', 'dw')
 
-keymap('n', '<C-d>', '<C-d>zz')    -- center screen after move
+keymap('n', '<C-d>', '<C-d>zz')           -- center screen after move
 keymap('n', '<C-u>', '<C-u>zz')
-keymap({'n', 'x'}, '<leader>[', '10[{') -- move to start/end of group
-keymap({'n', 'x'}, '<leader>]', '10]}')
-keymap('n', '<leader>o', 'o<C-c>') -- empty line
+keymap({ 'n', 'x' }, '<leader>[', '10[{') -- move to start/end of group
+keymap({ 'n', 'x' }, '<leader>]', '10]}')
+keymap('n', '<leader>o', 'o<C-c>')        -- empty line
 keymap('n', '<leader>O', 'O<C-c>')
 keymap('n', 'o', 'o<C-c>"_cc')
 keymap('n', 'O', 'O<C-c>"_cc')
@@ -78,14 +82,10 @@ keymap('n', 'J', 'mzJ`z')                                    -- keep cursor pos 
 keymap('n', '<C-b>', '<cmd>%bd<bar>e#<bar>bd#<CR>\'"', opts) -- close all buffers
 keymap('n', '_', '<cmd>bprev<CR>', opts)
 keymap('n', '+', '<cmd>bnext<CR>', opts)
-keymap('v', '<', '<gv')              -- keep selection while indenting
+keymap('v', '<', '<gv')                        -- keep selection while indenting
 keymap('v', '>', '>gv')
-keymap('v', 'J', ":m '>+1<CR>gv=gv") -- move selected up/down
+keymap('v', 'J', ":m '>+1<CR>gv=gv")           -- move selected up/down
 keymap('v', 'K', ":m '<-2<CR>gv=gv")
-keymap('i', '<C-h>', '<C-o>b')       -- move by word on hl
-keymap('i', '<C-l>', '<C-o>w')
-keymap({ 'n', 'x' }, '<C-h>', 'b')
-keymap({ 'n', 'x' }, '<C-l>', 'w')
 keymap({ 'n', 'x', 'i' }, '<A-Left>', '<C-o>') -- navigate buffers
 keymap({ 'n', 'x', 'i' }, '<A-Right>', '<C-i>')
 
