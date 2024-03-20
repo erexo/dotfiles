@@ -48,6 +48,7 @@ local keymap = vim.keymap.set
 local opts = { noremap = true, silent = true }
 vim.g.mapleader = ' '
 
+
 keymap({ 'n', 'x', 'i' }, '<C-s>', '<cmd>write<CR>')
 keymap({ 'n', 'x', 'i' }, '<C-S>', '<cmd>wa<CR>')
 keymap({ 'n', 'x', 'i', 't' }, '<C-q>', '<cmd>quitall<CR>')
@@ -131,9 +132,21 @@ require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
     use {
         'morhetz/gruvbox',
-        as = 'gruvbox',
         config = function()
-            vim.cmd('colorscheme gruvbox')
+            vim.cmd 'colorscheme gruvbox'
+            vim.api.nvim_set_hl(0, "@markup.heading.1.markdown", { link = 'GruvboxGreen' })
+            vim.api.nvim_set_hl(0, "@markup.heading.2.markdown", { link = 'GruvboxGreenBold' })
+            vim.api.nvim_set_hl(0, "@markup.heading.3.markdown", { link = 'GruvboxYellow' })
+            vim.api.nvim_set_hl(0, "@markup.heading.4.markdown", { link = 'GruvboxYellowBold' })
+            vim.api.nvim_set_hl(0, "@markup.heading.5.markdown", { link = 'GruvboxAqua' })
+            vim.api.nvim_set_hl(0, "@markup.heading.6.markdown", { link = 'GruvboxAquaBold' })
+            vim.api.nvim_set_hl(0, "@markup.quote.markdown", { link = 'GruvboxGray' })
+            vim.api.nvim_set_hl(0, "@markup.raw.markdown_inline", { link = 'GruvboxRed' })
+            vim.api.nvim_set_hl(0, "@markup.link.label.markdown_inline", { link = 'GruvboxPurpleBold' })
+            vim.api.nvim_set_hl(0, "@markup.link.url.markdown_inline", { link = 'GruvboxBlue' })
+            vim.api.nvim_set_hl(0, "@markup.strikethrough.markdown_inline", { strikethrough = true })
+            vim.api.nvim_set_hl(0, "@markup.italic.markdown_inline", { italic = true })
+            vim.api.nvim_set_hl(0, "@markup.strong.markdown_inline", { bold = true })
         end
     }
     use {
@@ -311,6 +324,7 @@ keymap('n', '<leader>tw', ':WhichKey<CR>', opts)
 keymap('n', '<leader>;', ':ToggleTerm direction=float<CR>', opts)
 keymap('n', '<leader>:', ':ToggleTerm direction=horizontal<CR>', opts)
 keymap('n', '<leader>n', ':SimpleNoteList<CR>', opts)
+keymap('n', '<leader>N', function() vim.o.cole = vim.o.cole == 0 end, opts)
 
 keymap('n', '<leader>te', ":Neotest run<CR>", opts)
 keymap('n', '<leader>tE', ":lua require('neotest').run.run(vim.fn.expand('%'))<CR>", opts)
