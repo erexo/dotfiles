@@ -198,10 +198,35 @@ require('packer').startup(function(use)
             -- Debugging
             { 'mfussenegger/nvim-dap' },
             { 'rcarriga/nvim-dap-ui' },
+            { 'nvim-neotest/nvim-nio' },
             { 'theHamsta/nvim-dap-virtual-text' },
             { 'simrat39/rust-tools.nvim' },
             { 'leoluz/nvim-dap-go' },
         }
+    }
+    use {
+        "nvim-neotest/neotest",
+        requires = {
+            "nvim-lua/plenary.nvim",
+            "antoinemadec/FixCursorHold.nvim",
+            "nvim-treesitter/nvim-treesitter",
+            "nvim-neotest/neotest-go",
+        },
+        config = function()
+            local neotest_ns = vim.api.nvim_create_namespace("neotest")
+            vim.diagnostic.config({
+                virtual_text = {
+                    format = function(diagnostic)
+                        return diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
+                    end,
+                },
+            }, neotest_ns)
+            require("neotest").setup({
+                adapters = {
+                    require("neotest-go"),
+                },
+            })
+        end
     }
     use {
         "windwp/nvim-autopairs",
@@ -259,6 +284,12 @@ require('packer').startup(function(use)
             }
         end
     }
+    use {
+        "rguruprakash/simple-note.nvim",
+        config = function()
+            require('simple-note').setup()
+        end
+    }
     use 'kyazdani42/nvim-web-devicons'
     use 'tpope/vim-fugitive' -- git management
     use 'nvim-lua/plenary.nvim'
@@ -279,6 +310,14 @@ keymap('n', '<leader>tr', ':TroubleToggle<CR>', opts)
 keymap('n', '<leader>tw', ':WhichKey<CR>', opts)
 keymap('n', '<leader>;', ':ToggleTerm direction=float<CR>', opts)
 keymap('n', '<leader>:', ':ToggleTerm direction=horizontal<CR>', opts)
+keymap('n', '<leader>n', ':SimpleNoteList<CR>', opts)
+
+keymap('n', '<leader>te', ":Neotest run<CR>", opts)
+keymap('n', '<leader>tE', ":lua require('neotest').run.run(vim.fn.expand('%'))<CR>", opts)
+keymap('n', '<leader>tk', ":Neotest output<CR>", opts)
+keymap('n', '<leader>to', ":Neotest output-panel toggle<CR>", opts)
+keymap('n', '<leader>tO', ":Neotest output-panel clear<CR>", opts)
+keymap('n', '<leader>ts', ":Neotest summary toggle<CR>", opts)
 
 local crates = require('crates')
 keymap('n', '<leader>ct', crates.toggle, opts)
@@ -312,8 +351,8 @@ keymap('v', '<leader>S', function()
 end, opts)
 keymap('n', '<leader>b', ':Telescope buffers previewer=false<CR>', opts)
 keymap('n', '<leader>m', ':Telescope oldfiles previewer=false<CR>', opts)
-keymap('n', '<leader>n', telescopebin.keymaps)
-keymap('n', '<leader>N', telescopebin.command_history)
+keymap('n', '<leader>k', telescopebin.keymaps)
+keymap('n', '<leader>K', telescopebin.command_history)
 keymap('n', '<C-w>a', '<C-w>v<C-w>w<cmd>lua require\'telescope\'.extensions.menufacture.find_files()<CR>') -- open windows
 keymap('n', '<C-w>A', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.resume()<CR>')                    -- open windows
 keymap('n', '<C-w>s', '<C-w>v<C-w>w<cmd>lua require\'telescope\'.extensions.menufacture.live_grep()<CR>')
@@ -323,9 +362,11 @@ require('nvim-treesitter.configs').setup {
     ensure_installed = {
         'lua', 'vim',
         'rust',
-        'go',
+        'go', 'gomod', 'gosum',
         'c', 'cpp',
-        'c_sharp'
+        'c_sharp',
+        'json', 'yaml', 'toml',
+        'markdown', 'markdown_inline'
     },
     highlight = { enable = true },
     diagnostics = { enabled = true },
@@ -348,6 +389,7 @@ lsp.preset("recommended")
 lsp.ensure_installed({
     'rust_analyzer',
     'gopls',
+    'marksman',
 })
 -- lsp.skip_server_setup({'rust_analyzer'})
 local lspkind = require('lspkind')
