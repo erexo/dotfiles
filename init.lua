@@ -325,6 +325,7 @@ keymap('n', '<leader>;', ':ToggleTerm direction=float<CR>', opts)
 keymap('n', '<leader>:', ':ToggleTerm direction=horizontal<CR>', opts)
 keymap('n', '<leader>n', ':SimpleNoteList<CR>', opts)
 keymap('n', '<leader>N', function() vim.o.cole = vim.o.cole == 0 end, opts)
+keymap('n', '<leader>w', function() vim.o.wrap = not vim.o.wrap end, opts)
 
 keymap('n', '<leader>te', ":Neotest run<CR>", opts)
 keymap('n', '<leader>tE', ":lua require('neotest').run.run(vim.fn.expand('%'))<CR>", opts)
@@ -371,6 +372,25 @@ keymap('n', '<C-w>a', '<C-w>v<C-w>w<cmd>lua require\'telescope\'.extensions.menu
 keymap('n', '<C-w>A', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.resume()<CR>')                    -- open windows
 keymap('n', '<C-w>s', '<C-w>v<C-w>w<cmd>lua require\'telescope\'.extensions.menufacture.live_grep()<CR>')
 keymap('n', '<C-w>S', '<C-w>v<C-w>w<cmd>lua require\'telescope\'.extensions.menufacture.grep_string()<CR>')
+keymap('n', '<C-w><C-e>', function()
+    if vim.api.nvim_win_get_option(0, 'winfixwidth') then
+        return
+    end
+    local total_width = 0
+    local windows = 0
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        if not vim.api.nvim_win_get_option(win, 'winfixwidth') then
+            total_width = total_width + vim.api.nvim_win_get_width(win)
+            windows = windows + 1
+        end
+    end
+    local expandWidth = math.ceil(total_width * 2 / 3)
+    if vim.api.nvim_win_get_width(0) >= expandWidth then
+        vim.api.nvim_win_set_width(0, math.ceil(total_width / windows))
+    else
+        vim.api.nvim_win_set_width(0, expandWidth)
+    end
+end, opts)
 
 require('nvim-treesitter.configs').setup {
     ensure_installed = {
