@@ -46,24 +46,27 @@ vim.opt.titlestring = '%m%r' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t') .. ' (
 -- maps
 local keymap = vim.keymap.set
 local opts = { noremap = true, silent = true }
+local nx = { 'n', 'x' }
+local nxi = { 'n', 'x', 'i' }
+local nxit = { 'n', 'x', 'i', 't' }
+
 vim.g.mapleader = ' '
 
-
-keymap({ 'n', 'x', 'i' }, '<C-s>', '<cmd>write<CR>')
-keymap({ 'n', 'x', 'i' }, '<C-S>', '<cmd>wa<CR>')
-keymap({ 'n', 'x', 'i', 't' }, '<C-q>', '<cmd>quitall<CR>')
-keymap({ 'n', 'x' }, '<leader>q', '<cmd>quit<CR>')
-keymap({ 'n', 'x' }, '<leader>Q', '<cmd>tabclose<CR>')
+keymap(nxi, '<C-s>', '<cmd>write<CR>')
+keymap(nxi, '<C-S>', '<cmd>wa<CR>')
+keymap(nxit, '<C-q>', '<cmd>quitall<CR>')
+keymap(nx, '<leader>q', '<cmd>quit<CR>')
+keymap(nx, '<leader>Q', '<cmd>tabclose<CR>')
 keymap('t', '<Esc>', '<cmd>quit<CR>')                    -- exit terminal
 keymap('t', '<C-n>', '<C-\\><C-n>')                      -- escape terminal
 
-keymap({ 'n', 'x' }, 'c', '"_c')                         -- don't yank on 'c'
-keymap({ 'n', 'x' }, 'd', '"_d')                         -- don't yank on 'd'
+keymap(nx, 'c', '"_c')                                   -- don't yank on 'c'
+keymap(nx, 'd', '"_d')                                   -- don't yank on 'd'
 keymap('x', 'y', 'ygv<Esc>')                             -- don't change pos after yank
 keymap('x', '<leader>y', '"+ygv<Esc><cmd>let @"=@0<CR>') -- copy to system clipboard
 keymap('x', '<leader>Y', '"+Y<cmd>let @"=@0<CR>')
-keymap({ 'n', 'x' }, '<leader>p', '"+p')                 -- paste from system clipboard
-keymap({ 'n', 'x' }, '<leader>P', '"+P')
+keymap(nx, '<leader>p', '"+p')                           -- paste from system clipboard
+keymap(nx, '<leader>P', '"+P')
 keymap('x', 'p', '"_dp')                                 -- paste without yanking
 keymap('x', 'P', '"_dP')
 keymap('i', '<C-H>', '<C-W>')                            -- backspace/delete
@@ -71,11 +74,11 @@ keymap('n', '<C-H>', 'db')
 keymap('i', '<C-Del>', '<space><Esc>ce')
 keymap('n', '<C-Del>', 'dw')
 
-keymap('n', '<C-d>', '<C-d>zz')           -- center screen after move
+keymap('n', '<C-d>', '<C-d>zz')    -- center screen after move
 keymap('n', '<C-u>', '<C-u>zz')
-keymap({ 'n', 'x' }, '<leader>[', '10[{') -- move to start/end of group
-keymap({ 'n', 'x' }, '<leader>]', '10]}')
-keymap('n', '<leader>o', 'o<C-c>')        -- empty line
+keymap(nx, '<leader>[', '10[{')    -- move to start/end of group
+keymap(nx, '<leader>]', '10]}')
+keymap('n', '<leader>o', 'o<C-c>') -- empty line
 keymap('n', '<leader>O', 'O<C-c>')
 keymap('n', 'o', 'o<C-c>"_cc')
 keymap('n', 'O', 'O<C-c>"_cc')
@@ -83,12 +86,14 @@ keymap('n', 'J', 'mzJ`z')                                    -- keep cursor pos 
 keymap('n', '<C-b>', '<cmd>%bd<bar>e#<bar>bd#<CR>\'"', opts) -- close all buffers
 keymap('n', '_', '<cmd>bprev<CR>', opts)
 keymap('n', '+', '<cmd>bnext<CR>', opts)
-keymap('v', '<', '<gv')                        -- keep selection while indenting
+keymap('v', '<', '<gv')              -- keep selection while indenting
 keymap('v', '>', '>gv')
-keymap('v', 'J', ":m '>+1<CR>gv=gv")           -- move selected up/down
+keymap('v', 'J', ":m '>+1<CR>gv=gv") -- move selected up/down
 keymap('v', 'K', ":m '<-2<CR>gv=gv")
-keymap({ 'n', 'x', 'i' }, '<A-Left>', '<C-o>') -- navigate buffers
-keymap({ 'n', 'x', 'i' }, '<A-Right>', '<C-i>')
+keymap(nxi, '<A-Left>', '<C-o>')     -- navigate buffers
+keymap(nxi, '<A-Right>', '<C-i>')
+keymap(nxi, '<C-Left>', '<C-w><Left>') -- nawigate windows
+keymap(nxi, '<C-Right>', '<C-w><Right>')
 
 --> lsp
 keymap('n', '<leader>do', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
@@ -100,7 +105,7 @@ keymap('n', '<leader>D', vim.lsp.buf.type_definition)
 keymap('n', '<leader>df', vim.lsp.buf.definition)
 keymap('n', '<leader>ca', vim.lsp.buf.code_action)
 keymap('n', 'K', vim.lsp.buf.hover)
-keymap({ 'n', 'i' }, '<C-k>', vim.lsp.buf.signature_help)
+keymap(nxi, '<C-k>', vim.lsp.buf.signature_help)
 keymap('n', '<leader>f', vim.lsp.buf.format)
 
 --> git
@@ -350,9 +355,9 @@ keymap('v', '<leader>cu', crates.upgrade_crates, opts)
 
 local telescope = require('telescope')
 local telescopebin = require('telescope.builtin')
-keymap({ 'n', 'v' }, '<leader>rf', telescopebin.lsp_references)
-keymap({ 'n', 'v' }, '<leader>ef', telescopebin.lsp_implementations)
-keymap({ 'n', 'v' }, '<leader>ds', telescopebin.lsp_document_symbols)
+keymap(nx, '<leader>rf', telescopebin.lsp_references)
+keymap(nx, '<leader>ef', telescopebin.lsp_implementations)
+keymap(nx, '<leader>ds', telescopebin.lsp_document_symbols)
 keymap('n', '<leader>a', telescope.extensions.menufacture.find_files)
 keymap('n', '<leader>A', telescopebin.resume)
 keymap('n', '<leader>s', telescope.extensions.menufacture.live_grep)
