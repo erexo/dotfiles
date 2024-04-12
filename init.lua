@@ -184,6 +184,9 @@ require('packer').startup(function(use)
     }
     use {
         'nvim-treesitter/nvim-treesitter',
+        requires = {
+            "nvim-treesitter/nvim-treesitter-textobjects"
+        },
         run = function()
             pcall(require('nvim-treesitter.install').update { with_sync = true })
         end,
@@ -404,6 +407,44 @@ require('nvim-treesitter.configs').setup {
     },
     highlight = { enable = true },
     diagnostics = { enabled = true },
+    textobjects = {
+        move = {
+            enable = true,
+            set_jumps = true,
+            goto_next_start = {
+                ["]f"] = "@function.inner",
+                ["]p"] = "@parameter.inner"
+            },
+            goto_previous_start = {
+                ["[f"] = "@function.inner",
+                ["[p"] = "@parameter.inner"
+            }
+        },
+        select = {
+            enable = true,
+            lookahead = true,
+            include_surrounding_whitespace = true,
+            keymaps = {
+                ["ib"] = "@block.inner",
+                ["ab"] = "@block.outer",
+                ["if"] = "@function.inner",
+                ["af"] = "@function.outer",
+                ["ip"] = "@parameter.inner",
+                ["ap"] = "@parameter.outer"
+            }
+        },
+        swap = {
+            enable = true,
+            swap_next = {
+                ["]F"] = "@function.outer",
+                ["]P"] = "@parameter.inner"
+            },
+            swap_previous = {
+                ["[F"] = "@function.outer",
+                ["[P"] = "@parameter.inner"
+            }
+        }
+    }
 }
 
 require('lualine').setup {
