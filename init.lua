@@ -92,8 +92,10 @@ keymap('v', 'J', ":m '>+1<CR>gv=gv") -- move selected up/down
 keymap('v', 'K', ":m '<-2<CR>gv=gv")
 keymap(nxi, '<A-Left>', '<C-o>')     -- navigate buffers
 keymap(nxi, '<A-Right>', '<C-i>')
-keymap(nxi, '<C-Left>', '<C-w><Left>') -- nawigate windows
-keymap(nxi, '<C-Right>', '<C-w><Right>')
+keymap(nxi, '<C-w><C-Left>', '<C-w><Left>') -- nawigate windows
+keymap(nxi, '<C-W><C-Right>', '<C-w><Right>')
+keymap(nxi, '<C-W><C-Up>', '<C-w><Up>')
+keymap(nxi, '<C-W><C-Down>', '<C-w><Down>')
 
 --> lsp
 keymap('n', '<leader>do', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
