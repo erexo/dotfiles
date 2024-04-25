@@ -86,11 +86,11 @@ keymap('n', 'J', 'mzJ`z')                                    -- keep cursor pos 
 keymap('n', '<C-b>', '<cmd>%bd<bar>e#<bar>bd#<CR>\'"', opts) -- close all buffers
 keymap('n', '_', '<cmd>bprev<CR>', opts)
 keymap('n', '+', '<cmd>bnext<CR>', opts)
-keymap('v', '<', '<gv')              -- keep selection while indenting
+keymap('v', '<', '<gv')                     -- keep selection while indenting
 keymap('v', '>', '>gv')
-keymap('v', 'J', ":m '>+1<CR>gv=gv") -- move selected up/down
+keymap('v', 'J', ":m '>+1<CR>gv=gv")        -- move selected up/down
 keymap('v', 'K', ":m '<-2<CR>gv=gv")
-keymap(nxi, '<A-Left>', '<C-o>')     -- navigate buffers
+keymap(nxi, '<A-Left>', '<C-o>')            -- navigate buffers
 keymap(nxi, '<A-Right>', '<C-i>')
 keymap(nxi, '<C-w><C-Left>', '<C-w><Left>') -- nawigate windows
 keymap(nxi, '<C-W><C-Right>', '<C-w><Right>')
@@ -200,7 +200,7 @@ require('packer').startup(function(use)
     }
     use {
         'VonHeikemen/lsp-zero.nvim',
-        branch = 'v1.x',
+        branch = 'v3.x',
         requires = {
             -- LSP Support
             { 'neovim/nvim-lspconfig' },
@@ -208,22 +208,18 @@ require('packer').startup(function(use)
             { 'williamboman/mason-lspconfig.nvim' },
             -- Autocompletion
             { 'hrsh7th/nvim-cmp' },
-            { 'hrsh7th/cmp-buffer' },
-            { 'hrsh7th/cmp-path' },
-            { 'saadparwaiz1/cmp_luasnip' },
             { 'hrsh7th/cmp-nvim-lsp' },
-            { 'hrsh7th/cmp-nvim-lua' },
-            { 'hrsh7th/cmp-nvim-lsp-signature-help' },
             { 'onsails/lspkind.nvim' },
+            { 'hrsh7th/cmp-nvim-lsp-signature-help' },
             -- Snippets
             { 'L3MON4D3/LuaSnip' },
+            { 'saadparwaiz1/cmp_luasnip' },
             { 'rafamadriz/friendly-snippets' },
             -- Debugging
             { 'mfussenegger/nvim-dap' },
             { 'rcarriga/nvim-dap-ui' },
             { 'nvim-neotest/nvim-nio' },
             { 'theHamsta/nvim-dap-virtual-text' },
-            { 'simrat39/rust-tools.nvim' },
             { 'leoluz/nvim-dap-go' },
         }
     }
@@ -467,63 +463,79 @@ require('nvim_comment').setup({ comment_empty = false })
 
 -- lsp configuration
 local lsp = require("lsp-zero")
-lsp.preset("recommended")
-lsp.ensure_installed({
-    'rust_analyzer',
-    'gopls',
-    'marksman',
+require('mason').setup()
+require('mason-lspconfig').setup({
+    ensure_installed = {
+        'gopls',
+        'rust_analyzer',
+        'marksman'
+    },
+    handlers = { lsp.default_setup }
 })
--- lsp.skip_server_setup({'rust_analyzer'})
-local lspkind = require('lspkind')
-lsp.setup_nvim_cmp({
+
+require('luasnip.loaders.from_vscode').lazy_load()
+require("luasnip").config.setup({
+    region_check_events = "CursorMoved",
+    delete_check_events = "TextChanged",
+})
+
+local cmp = require('cmp')
+local cmp_action = lsp.cmp_action()
+cmp.setup({
+    preselect = 'item',
+    completion = {
+        completeopt = 'menu,menuone,noinsert'
+    },
+    window = {
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
+    },
     sources = {
-        { name = 'nvim_buffer' },
-        { name = 'nvim_path' },
         { name = 'nvim_lsp' },
         { name = 'nvim_lua' },
-        { name = 'nvim_lsp_signature_help' }
+        { name = 'luasnip' },
+        { name = 'nvim_lsp_signature_help' },
+    },
+    mapping = {
+        ['<Up>'] = cmp.mapping.select_prev_item({ behavior = 'select' }),
+        ['<Down>'] = cmp.mapping.select_next_item({ behavior = 'select' }),
+        ['<Tab>'] = cmp_action.luasnip_supertab(),
+        ['<S-Tab>'] = cmp_action.luasnip_shift_supertab(),
+        ['<CR>'] = cmp.mapping.confirm(),
+        ['<Esc>'] = cmp.mapping.abort(),
+        ['<C-c>'] = cmp.mapping.abort(),
+        ['<C-N>'] = cmp.mapping(function()
+            if cmp.visible() then
+                cmp.abort()
+            else
+                cmp.complete()
+            end
+        end),
+    },
+    snippet = {
+        expand = function(args)
+            require('luasnip').lsp_expand(args.body)
+        end,
     },
     formatting = {
-        format = lspkind.cmp_format({
-            mode = 'symbol',
-            maxwidth = 50,
-            ellipsis_char = '...',
-            before = function(entry, vim_item)
-                return vim_item
-            end
-        })
+        format = require('lspkind').cmp_format({ mode = 'symbol' })
+    }
+})
+lsp.set_sign_icons({
+    error = "",
+    warn = "",
+    hint = "",
+    info = ""
+})
+lsp.format_on_save({
+    servers = {
+        ['gopls'] = { 'go' },
+        ['rust_analyzer'] = { 'rust' }
     }
 })
 lsp.setup()
-vim.diagnostic.config({ virtual_text = true })
-local signs = {
-    Error = " ",
-    Warning = " ",
-    Hint = " ",
-    Information = " "
-}
-for type, icon in pairs(signs) do
-    local hl = "DiagnosticSign" .. type
-    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-end
-
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-    vim.lsp.diagnostic.on_publish_diagnostics, {
-        underline = true,
-        virtual_text = true,
-        signs = true,
-    })
-local format_sync_grp = vim.api.nvim_create_augroup("FileFormat", {})
-vim.api.nvim_create_autocmd("BufWritePre", {
-    pattern = { "*.go" },
-    callback = function()
-        vim.lsp.buf.format()
-    end,
-    group = format_sync_grp,
-})
 
 -- debugger configuration
-require('rust-tools').setup()
 require('dap-go').setup()
 local dap = require 'dap'
 local dapui = require 'dapui'
