@@ -502,8 +502,7 @@ cmp.setup({
         ['<Tab>'] = cmp_action.luasnip_supertab(),
         ['<S-Tab>'] = cmp_action.luasnip_shift_supertab(),
         ['<CR>'] = cmp.mapping.confirm(),
-        ['<Esc>'] = cmp.mapping.abort(),
-        ['<C-c>'] = cmp.mapping.abort(),
+        ['<C-e>'] = cmp.mapping.abort(),
         ['<C-N>'] = cmp.mapping(function()
             if cmp.visible() then
                 cmp.abort()
