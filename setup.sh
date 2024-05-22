@@ -1,4 +1,6 @@
 mkdir -p ~/.config/nvim/ && ln -sf "$(pwd -P)"/init.lua ~/.config/nvim/
+ln -sf "$(pwd -P)"/.zshrc ~/.zshrc
+echo "links created"
 
 GO_VER=$(curl -s 'https://go.dev/VERSION?m=text' | head -n 1)
 mkdir -p ~/go/src
