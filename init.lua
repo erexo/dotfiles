@@ -1,15 +1,3 @@
---[[
-~/.config/nvim/init.lua
-%userprofile%\AppData\Local\nvim\init.lua
-
-git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
-git clone https://github.com/wbthomason/packer.nvim "$env:LOCALAPPDATA\nvim-data\site\pack\packer\start\packer.nvim"
-
-go install github.com/go-delve/delve/cmd/dlv@latest
-apt install -y xclip ripgrep fd-find unzip
-unzip -q codelldb-x86_64-linux.vsix -d ~/lldb
-]]
-
 vim.opt.number = true
 vim.opt.relativenumber = true
 
