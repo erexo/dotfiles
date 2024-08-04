@@ -124,8 +124,6 @@ keymap('n', '<leader>gh', '<cmd>Gitsigns preview_hunk<CR>', opts)
 keymap('n', '<leader>gn', '<cmd>Gitsigns next_hunk<CR>', opts)
 keymap('n', '<leader>gN', '<cmd>Gitsigns prev_hunk<CR>', opts)
 
-keymap('n', '<leader>u', vim.cmd.UndotreeToggle) -- undotree
-
 local diagnostics_active = true
 local toggle_diagnostics = function()
     diagnostics_active = not diagnostics_active
@@ -138,22 +136,16 @@ vim.cmd.packadd('packer.nvim')
 require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
     use {
-        'morhetz/gruvbox',
+        'rebelot/kanagawa.nvim',
         config = function()
-            vim.cmd 'colorscheme gruvbox'
-            vim.api.nvim_set_hl(0, "@markup.heading.1.markdown", { link = 'GruvboxGreen' })
-            vim.api.nvim_set_hl(0, "@markup.heading.2.markdown", { link = 'GruvboxGreenBold' })
-            vim.api.nvim_set_hl(0, "@markup.heading.3.markdown", { link = 'GruvboxYellow' })
-            vim.api.nvim_set_hl(0, "@markup.heading.4.markdown", { link = 'GruvboxYellowBold' })
-            vim.api.nvim_set_hl(0, "@markup.heading.5.markdown", { link = 'GruvboxAqua' })
-            vim.api.nvim_set_hl(0, "@markup.heading.6.markdown", { link = 'GruvboxAquaBold' })
-            vim.api.nvim_set_hl(0, "@markup.quote.markdown", { link = 'GruvboxGray' })
-            vim.api.nvim_set_hl(0, "@markup.raw.markdown_inline", { link = 'GruvboxRed' })
-            vim.api.nvim_set_hl(0, "@markup.link.label.markdown_inline", { link = 'GruvboxPurpleBold' })
-            vim.api.nvim_set_hl(0, "@markup.link.url.markdown_inline", { link = 'GruvboxBlue' })
-            vim.api.nvim_set_hl(0, "@markup.strikethrough.markdown_inline", { strikethrough = true })
-            vim.api.nvim_set_hl(0, "@markup.italic.markdown_inline", { italic = true })
-            vim.api.nvim_set_hl(0, "@markup.strong.markdown_inline", { bold = true })
+            require('kanagawa').setup({
+                overrides = function(colors)
+                    return {
+                        Function = { bold = true }
+                    }
+                end
+            })
+            vim.cmd 'colorscheme kanagawa-wave'
         end
     }
     use {
@@ -166,7 +158,8 @@ require('packer').startup(function(use)
             { 'nvim-lua/plenary.nvim' },
             { 'kyazdani42/nvim-web-devicons' },
             { 'nvim-telescope/telescope-ui-select.nvim' },
-            { 'molecule-man/telescope-menufacture' }
+            { 'molecule-man/telescope-menufacture' },
+            { 'debugloop/telescope-undo.nvim' },
         },
         config = function()
             local telescope = require('telescope')
@@ -182,11 +175,12 @@ require('packer').startup(function(use)
                             search_in_directory = { [{ 'i', 'n' }] = '<C-r>' },
                             search_by_filename = { [{ 'i', 'n' }] = '<C-t>' },
                         },
-                    },
+                    }
                 }
             }
             telescope.load_extension("ui-select")
             telescope.load_extension("menufacture")
+            telescope.load_extension("undo")
         end
     }
     use {
@@ -309,16 +303,49 @@ require('packer').startup(function(use)
             require('simple-note').setup()
         end
     }
+    use({
+        'MeanderingProgrammer/markdown.nvim',
+        after = 'nvim-treesitter',
+        requires = "nvim-tree/nvim-web-devicons",
+        config = function()
+            require('render-markdown').setup()
+        end,
+    })
+    -- use({
+    --     'Isrothy/neominimap.nvim',
+    --     after = 'nvim-treesitter',
+    --     -- config = function()
+    --     --     require('neominimap').setup()
+    --     -- end,
+    -- })
+    use({
+        'axkirillov/hbac.nvim',
+        config = function()
+            local actions = require("hbac.telescope.actions")
+            require('hbac').setup({
+                threshold = 25,
+                telescope = {
+                    use_default_mappings = false,
+                    mappings = {
+                        i = {
+                            ["<C-r>"] = actions.delete_buffer,
+                            ["<C-p>"] = actions.toggle_pin
+                        }
+                    }
+                }
+            })
+        end
+    })
     use 'kyazdani42/nvim-web-devicons'
     use 'tpope/vim-fugitive' -- git management
     use 'nvim-lua/plenary.nvim'
     use 'sindrets/diffview.nvim'
-    use 'mbbill/undotree'
     use 'mg979/vim-visual-multi' -- multicursor
     use 'nvim-tree/nvim-tree.lua'
     use 'terrortylor/nvim-comment'
     use 'RRethy/vim-illuminate' -- highlight same words
     use 'tpope/vim-surround'
+    use 'lambdalisue/vim-suda'  -- :SudaWrite
 end)
 
 vim.cmd [[autocmd VimEnter * nested if !argc() && !exists("s:std_in") | execute 'lua require("persistence").load()' | endif]]
@@ -370,7 +397,8 @@ keymap('v', '<leader>S', function()
     end
     telescope.extensions.menufacture.live_grep({ default_text = text })
 end, opts)
-keymap('n', '<leader>b', ':Telescope buffers previewer=false<CR>', opts)
+keymap('n', '<leader>u', telescope.extensions.undo.undo)
+keymap('n', '<leader>b', telescope.extensions.hbac.buffers)
 keymap('n', '<leader>m', ':Telescope oldfiles previewer=false<CR>', opts)
 keymap('n', '<leader>k', telescopebin.keymaps)
 keymap('n', '<leader>K', telescopebin.command_history)
