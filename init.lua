@@ -1,3 +1,20 @@
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+    local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+    if vim.v.shell_error ~= 0 then
+        vim.api.nvim_echo({
+            { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+            { out,                            "WarningMsg" },
+            { "\nPress any key to exit..." },
+        }, true, {})
+        vim.fn.getchar()
+        os.exit(1)
+    end
+end
+vim.opt.rtp:prepend(lazypath)
+
 vim.opt.number = true
 vim.opt.relativenumber = true
 
@@ -85,6 +102,9 @@ keymap(nxi, '<C-W><C-Right>', '<C-w><Right>')
 keymap(nxi, '<C-W><C-Up>', '<C-w><Up>')
 keymap(nxi, '<C-W><C-Down>', '<C-w><Down>')
 
+keymap('n', '<S-L>', ':Lazy<CR>')
+keymap('n', '<S-M>', ':Mason<CR>')
+
 --> lsp
 keymap('n', '<leader>do', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
 keymap('n', '<leader>d[', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
@@ -119,12 +139,10 @@ local toggle_diagnostics = function()
 end
 keymap('n', '<leader>td', toggle_diagnostics)
 
--- packer
-vim.cmd.packadd('packer.nvim')
-require('packer').startup(function(use)
-    use 'wbthomason/packer.nvim'
-    use {
-        'rebelot/kanagawa.nvim',
+-- Lazy.nvim setup
+require("lazy").setup({
+    {
+        "rebelot/kanagawa.nvim",
         config = function()
             require('kanagawa').setup({
                 overrides = function(colors)
@@ -135,23 +153,23 @@ require('packer').startup(function(use)
             })
             vim.cmd 'colorscheme kanagawa-wave'
         end
-    }
-    use {
-        'nvim-lualine/lualine.nvim',
-        requires = { 'kyazdani42/nvim-web-devicons', opt = true }
-    }
-    use {
-        'nvim-telescope/telescope.nvim',
-        requires = {
-            { 'nvim-lua/plenary.nvim' },
-            { 'kyazdani42/nvim-web-devicons' },
-            { 'nvim-telescope/telescope-ui-select.nvim' },
-            { 'molecule-man/telescope-menufacture' },
-            { 'debugloop/telescope-undo.nvim' },
+    },
+    {
+        "nvim-lualine/lualine.nvim",
+        dependencies = { "kyazdani42/nvim-web-devicons" },
+    },
+    {
+        "nvim-telescope/telescope.nvim",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "kyazdani42/nvim-web-devicons",
+            "nvim-telescope/telescope-ui-select.nvim",
+            "molecule-man/telescope-menufacture",
+            "debugloop/telescope-undo.nvim",
         },
         config = function()
-            local telescope = require('telescope')
-            telescope.setup {
+            local telescope = require("telescope")
+            telescope.setup({
                 defaults = {
                     prompt_prefix = "   ",
                 },
@@ -159,55 +177,53 @@ require('packer').startup(function(use)
                     ["ui-select"] = { require("telescope.themes").get_dropdown {} },
                     menufacture = {
                         mappings = {
-                            main_menu = { [{ 'i', 'n' }] = '<C-^>' },
-                            search_in_directory = { [{ 'i', 'n' }] = '<C-r>' },
-                            search_by_filename = { [{ 'i', 'n' }] = '<C-t>' },
+                            main_menu = { [{ "i", "n" }] = "<C-^>" },
+                            search_in_directory = { [{ "i", "n" }] = "<C-r>" },
+                            search_by_filename = { [{ "i", "n" }] = "<C-t>" },
                         },
                     }
                 }
-            }
+            })
             telescope.load_extension("ui-select")
             telescope.load_extension("menufacture")
             telescope.load_extension("undo")
         end
-    }
-    use {
-        'nvim-treesitter/nvim-treesitter',
-        requires = {
-            "nvim-treesitter/nvim-treesitter-textobjects"
-        },
-        run = function()
-            pcall(require('nvim-treesitter.install').update { with_sync = true })
+    },
+    {
+        "nvim-treesitter/nvim-treesitter",
+        dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
+        build = function()
+            pcall(require("nvim-treesitter.install").update { with_sync = true })
         end,
-    }
-    use {
-        'VonHeikemen/lsp-zero.nvim',
-        branch = 'v3.x',
-        requires = {
+    },
+    {
+        "VonHeikemen/lsp-zero.nvim",
+        branch = "v3.x",
+        dependencies = {
             -- LSP Support
-            { 'neovim/nvim-lspconfig' },
-            { 'williamboman/mason.nvim' },
-            { 'williamboman/mason-lspconfig.nvim' },
+            "neovim/nvim-lspconfig",
+            "williamboman/mason.nvim",
+            "williamboman/mason-lspconfig.nvim",
             -- Autocompletion
-            { 'hrsh7th/nvim-cmp' },
-            { 'hrsh7th/cmp-nvim-lsp' },
-            { 'onsails/lspkind.nvim' },
-            { 'hrsh7th/cmp-nvim-lsp-signature-help' },
+            "hrsh7th/nvim-cmp",
+            "hrsh7th/cmp-nvim-lsp",
+            "onsails/lspkind.nvim",
+            "hrsh7th/cmp-nvim-lsp-signature-help",
             -- Snippets
-            { 'L3MON4D3/LuaSnip' },
-            { 'saadparwaiz1/cmp_luasnip' },
-            { 'rafamadriz/friendly-snippets' },
+            "L3MON4D3/LuaSnip",
+            "saadparwaiz1/cmp_luasnip",
+            "rafamadriz/friendly-snippets",
             -- Debugging
-            { 'mfussenegger/nvim-dap' },
-            { 'rcarriga/nvim-dap-ui' },
-            { 'nvim-neotest/nvim-nio' },
-            { 'theHamsta/nvim-dap-virtual-text' },
-            { 'leoluz/nvim-dap-go' },
+            "mfussenegger/nvim-dap",
+            "rcarriga/nvim-dap-ui",
+            "nvim-neotest/nvim-nio",
+            "theHamsta/nvim-dap-virtual-text",
+            "leoluz/nvim-dap-go",
         }
-    }
-    use {
+    },
+    {
         "nvim-neotest/neotest",
-        requires = {
+        dependencies = {
             "nvim-lua/plenary.nvim",
             "antoinemadec/FixCursorHold.nvim",
             "nvim-treesitter/nvim-treesitter",
@@ -228,12 +244,12 @@ require('packer').startup(function(use)
                 },
             })
         end
-    }
-    use {
+    },
+    {
         "windwp/nvim-autopairs",
         config = function() require("nvim-autopairs").setup() end
-    }
-    use {
+    },
+    {
         "akinsho/toggleterm.nvim",
         config = function()
             require("toggleterm").setup {
@@ -242,75 +258,76 @@ require('packer').startup(function(use)
                 terminal_mappings = true,
             }
         end
-    }
-    use {
+    },
+    {
         "folke/trouble.nvim",
-        requires = "nvim-tree/nvim-web-devicons",
+        dependencies = "nvim-tree/nvim-web-devicons",
         config = function() require("trouble").setup() end
-    }
-    use({
+    },
+    {
         "folke/persistence.nvim",
         event = "BufReadPre",
-        module = "persistence",
         config = function() require("persistence").setup() end
-    })
-    use {
-        'lewis6991/gitsigns.nvim',
-        config = function() require('gitsigns').setup() end
-    }
-    use {
+    },
+    {
+        "lewis6991/gitsigns.nvim",
+        config = function() require("gitsigns").setup() end
+    },
+    {
         "folke/which-key.nvim",
         config = function()
             vim.o.timeout = true
             vim.o.timeoutlen = 300
             require("which-key").setup()
         end
-    }
-    use {
-        'saecki/crates.nvim',
-        tag = 'v0.3.0',
-        requires = { 'nvim-lua/plenary.nvim' },
+    },
+    {
+        "saecki/crates.nvim",
+        version = "v0.3.0",
+        dependencies = { "nvim-lua/plenary.nvim" },
         config = function()
-            require('crates').setup()
+            require("crates").setup()
         end
-    }
-    use {
+    },
+    {
         "nat-418/boole.nvim",
         config = function()
             require("boole").setup {
                 mappings = {
-                    increment = '<C-a>',
-                    decrement = '<C-x>'
+                    increment = "<C-a>",
+                    decrement = "<C-x>"
                 },
             }
         end
-    }
-    use {
+    },
+    {
         "rguruprakash/simple-note.nvim",
         config = function()
-            require('simple-note').setup()
+            require("simple-note").setup()
         end
-    }
-    use({
-        'MeanderingProgrammer/markdown.nvim',
-        after = 'nvim-treesitter',
-        requires = "nvim-tree/nvim-web-devicons",
+    },
+    {
+        "MeanderingProgrammer/markdown.nvim",
+        dependencies = "nvim-tree/nvim-web-devicons",
         config = function()
-            require('render-markdown').setup()
+            require("render-markdown").setup()
+        end
+    },
+    {
+        "Isrothy/neominimap.nvim",
+        dependencies = "nvim-treesitter/nvim-treesitter",
+        init = function()
+            vim.g.neominimap = {
+                auto_enable = false,
+                minimap_width = 10,
+            }
         end,
-    })
-    -- use({
-    --     'Isrothy/neominimap.nvim',
-    --     after = 'nvim-treesitter',
-    --     -- config = function()
-    --     --     require('neominimap').setup()
-    --     -- end,
-    -- })
-    use({
-        'axkirillov/hbac.nvim',
+    },
+    {
+        "axkirillov/hbac.nvim",
         config = function()
             local actions = require("hbac.telescope.actions")
-            require('hbac').setup({
+            require("hbac").setup({
                 threshold = 25,
                 telescope = {
                     use_default_mappings = false,
@@ -323,18 +340,18 @@ require('packer').startup(function(use)
                 }
             })
         end
-    })
-    use 'kyazdani42/nvim-web-devicons'
-    use 'tpope/vim-fugitive' -- git management
-    use 'nvim-lua/plenary.nvim'
-    use 'sindrets/diffview.nvim'
-    use 'mg979/vim-visual-multi' -- multicursor
-    use 'nvim-tree/nvim-tree.lua'
-    use 'terrortylor/nvim-comment'
-    use 'RRethy/vim-illuminate' -- highlight same words
-    use 'tpope/vim-surround'
-    use 'lambdalisue/vim-suda'  -- :SudaWrite
-end)
+    },
+    "kyazdani42/nvim-web-devicons",
+    "tpope/vim-fugitive", -- git management
+    "nvim-lua/plenary.nvim",
+    "sindrets/diffview.nvim",
+    "mg979/vim-visual-multi", -- multicursor
+    "nvim-tree/nvim-tree.lua",
+    "terrortylor/nvim-comment",
+    "RRethy/vim-illuminate", -- highlight same words
+    "tpope/vim-surround",
+    "lambdalisue/vim-suda",  -- :SudaWrite
+})
 
 vim.cmd [[autocmd VimEnter * nested if !argc() && !exists("s:std_in") | execute 'lua require("persistence").load()' | endif]]
 
@@ -387,7 +404,7 @@ keymap('v', '<leader>S', function()
 end, opts)
 keymap('n', '<leader>u', telescope.extensions.undo.undo)
 keymap('n', '<leader>b', telescope.extensions.hbac.buffers)
-keymap('n', '<leader>m', ':Telescope oldfiles previewer=false<CR>', opts)
+keymap('n', '<leader>m', ':Neominimap toggle<CR>', opts)
 keymap('n', '<leader>k', telescopebin.keymaps)
 keymap('n', '<leader>K', telescopebin.command_history)
 keymap('n', '<C-w>a', '<C-w>v<C-w>w<cmd>lua require\'telescope\'.extensions.menufacture.find_files()<CR>') -- open windows
