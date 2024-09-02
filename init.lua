@@ -192,9 +192,7 @@ require("lazy").setup({
     {
         "nvim-treesitter/nvim-treesitter",
         dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
-        build = function()
-            pcall(require("nvim-treesitter.install").update { with_sync = true })
-        end,
+        build = ":TSUpdate"
     },
     {
         "VonHeikemen/lsp-zero.nvim",
@@ -496,6 +494,7 @@ require('nvim_comment').setup({ comment_empty = false })
 
 -- lsp configuration
 local lsp = require("lsp-zero")
+lsp.extend_lspconfig()
 require('mason').setup()
 require('mason-lspconfig').setup({
     ensure_installed = {
