@@ -1,5 +1,6 @@
-mkdir -p ~/.config/nvim/ && ln -sf "$(pwd -P)"/init.lua ~/.config/nvim/
-ln -sf "$(pwd -P)"/.zshrc ~/.zshrc
+DOT_PATH="$(pwd -P)"/..
+ln -sf "$DOT_PATH/.config/nvim" ~/.config/nvim
+ln -sf "$DOT_PATH/.zshrc" ~/.zshrc
 echo "> links created"
 
 sudo apt install -y zsh curl
