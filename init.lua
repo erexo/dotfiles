@@ -271,7 +271,10 @@ require("lazy").setup({
     },
     {
         "lewis6991/gitsigns.nvim",
-        config = function() require("gitsigns").setup() end
+        config = function()
+            require("gitsigns").setup()
+            require("scrollbar.handlers.gitsigns").setup()
+        end
     },
     {
         "folke/which-key.nvim",
@@ -314,14 +317,10 @@ require("lazy").setup({
         end
     },
     {
-        "Isrothy/neominimap.nvim",
-        dependencies = "nvim-treesitter/nvim-treesitter",
-        init = function()
-            vim.g.neominimap = {
-                auto_enable = false,
-                minimap_width = 10,
-            }
-        end,
+        "petertriho/nvim-scrollbar",
+        config = function()
+            require("scrollbar").setup()
+        end
     },
     {
         "axkirillov/hbac.nvim",
@@ -351,6 +350,7 @@ require("lazy").setup({
     "RRethy/vim-illuminate", -- highlight same words
     "tpope/vim-surround",
     "lambdalisue/vim-suda",  -- :SudaWrite
+    "bkad/CamelCaseMotion"
 })
 
 vim.cmd [[autocmd VimEnter * nested if !argc() && !exists("s:std_in") | execute 'lua require("persistence").load()' | endif]]
@@ -430,6 +430,13 @@ keymap('n', '<C-w><C-e>', function()
         vim.api.nvim_win_set_width(0, expandWidth)
     end
 end, opts)
+
+-- disable default CamelCaseMotion maps
+vim.g.camelcasemotion_key = ''
+keymap('', 'W', '<Plug>CamelCaseMotion_w', { silent = true })
+keymap('', 'B', '<Plug>CamelCaseMotion_b', { silent = true })
+keymap('o', 'iW', '<Plug>CamelCaseMotion_iw', { silent = true })
+keymap('x', 'iW', '<Plug>CamelCaseMotion_iw', { silent = true })
 
 require('nvim-treesitter.configs').setup {
     ensure_installed = {
