@@ -192,9 +192,7 @@ require("lazy").setup({
     {
         "nvim-treesitter/nvim-treesitter",
         dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
-        build = function()
-            pcall(require("nvim-treesitter.install").update { with_sync = true })
-        end,
+        build = ":TSUpdate"
     },
     {
         "VonHeikemen/lsp-zero.nvim",
@@ -242,6 +240,21 @@ require("lazy").setup({
                 adapters = {
                     require("neotest-go"),
                 },
+            })
+        end
+    },
+    {
+        "mfussenegger/nvim-lint",
+        config = function()
+            require("lint").linters_by_ft = {
+                go = {"golangcilint"},
+            }
+
+            vim.api.nvim_create_autocmd("BufWritePost", {
+                pattern = "*.go",
+                callback = function()
+                    require('lint').try_lint()
+                end
             })
         end
     },
@@ -357,7 +370,7 @@ vim.cmd [[autocmd VimEnter * nested if !argc() && !exists("s:std_in") | execute 
 
 keymap('n', '<leader>tt', ':NvimTreeToggle<CR>', opts)
 keymap('n', '<leader>tf', ':NvimTreeFindFile<CR>', opts)
-keymap('n', '<leader>tr', ':TroubleToggle<CR>', opts)
+keymap('n', '<leader>T', '<cmd>Trouble diagnostics toggle<CR>', opts)
 keymap('n', '<leader>tw', ':WhichKey<CR>', opts)
 keymap('n', '<leader>;', ':ToggleTerm direction=float<CR>', opts)
 keymap('n', '<leader>:', ':ToggleTerm direction=horizontal<CR>', opts)
@@ -365,7 +378,7 @@ keymap('n', '<leader>n', ':SimpleNoteList<CR>', opts)
 keymap('n', '<leader>N', function() vim.o.cole = vim.o.cole == 0 end, opts)
 keymap('n', '<leader>w', function() vim.o.wrap = not vim.o.wrap end, opts)
 
-keymap('n', '<leader>te', ":Neotest run<CR>", opts)
+keymap('n', '<leader>tr', ":Neotest run<CR>", opts)
 keymap('n', '<leader>tE', ":lua require('neotest').run.run(vim.fn.expand('%'))<CR>", opts)
 keymap('n', '<leader>tk', ":Neotest output<CR>", opts)
 keymap('n', '<leader>to', ":Neotest output-panel toggle<CR>", opts)
@@ -503,6 +516,7 @@ require('nvim_comment').setup({ comment_empty = false })
 
 -- lsp configuration
 local lsp = require("lsp-zero")
+lsp.extend_lspconfig()
 require('mason').setup()
 require('mason-lspconfig').setup({
     ensure_installed = {

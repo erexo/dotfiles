@@ -21,4 +21,5 @@ export DOTNET_ROOT=~/dotnet
 source $ZSH/oh-my-zsh.sh
 
 export EDITOR='nvim'
+export TERM='xterm-256color'
 
