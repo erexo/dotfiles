@@ -50,6 +50,7 @@ vim.opt.titlestring = '%m%r' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t') .. ' (
 
 -- maps
 local keymap = vim.keymap.set
+local command = vim.api.nvim_create_user_command
 local opts = { noremap = true, silent = true }
 local nx = { 'n', 'x' }
 local nxi = { 'n', 'x', 'i' }
@@ -450,6 +451,15 @@ keymap('', 'W', '<Plug>CamelCaseMotion_w', { silent = true })
 keymap('', 'B', '<Plug>CamelCaseMotion_b', { silent = true })
 keymap('o', 'iW', '<Plug>CamelCaseMotion_iw', { silent = true })
 keymap('x', 'iW', '<Plug>CamelCaseMotion_iw', { silent = true })
+
+-- commands
+local function goTags(param, opts)
+  local file_path = vim.fn.expand("%:p")
+  local struct_name = vim.fn.expand("<cword>")
+  vim.cmd("!" .. string.format("gomodifytags -w -file %s -struct %s -transform keep -%s-tags %s", file_path, struct_name, param, opts.args))
+end
+command('GoAddTag', function(opts) goTags("add", opts) end, { nargs = 1 })
+command('GoRemoveTag', function(opts) goTags("remove", opts) end, { nargs = 1 })
 
 require('nvim-treesitter.configs').setup {
     ensure_installed = {
