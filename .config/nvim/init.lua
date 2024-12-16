@@ -331,12 +331,6 @@ require("lazy").setup({
         end
     },
     {
-        "petertriho/nvim-scrollbar",
-        config = function()
-            require("scrollbar").setup()
-        end
-    },
-    {
         "axkirillov/hbac.nvim",
         config = function()
             local actions = require("hbac.telescope.actions")
@@ -352,6 +346,19 @@ require("lazy").setup({
                     }
                 }
             })
+        end
+    },
+    {
+        "petertriho/nvim-scrollbar",
+        config = function()
+            require('scrollbar').setup {
+                handle = { blend = 25 },
+                marks = {
+                    GitAdd = { text = "│" },
+                    GitChange = { text = "│" }
+                },
+                handlers = { cursor = false }
+            }
         end
     },
     "kyazdani42/nvim-web-devicons",
