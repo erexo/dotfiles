@@ -16,7 +16,7 @@ echo "> $GO_VER installed"
 
 ~/go/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest
 sudo apt install -y xclip ripgrep fd-find unzip
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
-sudo tar -C /opt -xzf nvim-linux64.tar.gz
-rm nvim-linux64.tar.gz
+curl -LO https://github.com/neovim/neovim/releases/download/v0.11.0/nvim-linux-x86_64.tar.gz
+sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+rm nvim-linux-x86_64.tar.gz
 echo "> nvim installed"

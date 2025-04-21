@@ -57,6 +57,7 @@ local nxi = { 'n', 'x', 'i' }
 local nxit = { 'n', 'x', 'i', 't' }
 
 vim.g.mapleader = ' '
+vim.g.clipboard = 'osc52'
 
 keymap(nxi, '<C-s>', '<cmd>write<CR>')
 keymap(nxi, '<C-S>', '<cmd>wa<CR>')
@@ -279,9 +280,8 @@ require("lazy").setup({
         config = function() require("trouble").setup() end
     },
     {
-        "folke/persistence.nvim",
-        event = "BufReadPre",
-        config = function() require("persistence").setup() end
+        'rmagatti/auto-session',
+        config = function() require("auto-session").setup() end
     },
     {
         "lewis6991/gitsigns.nvim",
@@ -361,20 +361,28 @@ require("lazy").setup({
             }
         end
     },
+    {
+        "nvim-tree/nvim-tree.lua",
+        config = function()
+            require('nvim-tree').setup()
+        end
+    },
+    {
+        "terrortylor/nvim-comment",
+        config = function()
+            require('nvim_comment').setup({ comment_empty = false })
+        end
+    },
     "kyazdani42/nvim-web-devicons",
     "tpope/vim-fugitive", -- git management
     "nvim-lua/plenary.nvim",
     "sindrets/diffview.nvim",
     "mg979/vim-visual-multi", -- multicursor
-    "nvim-tree/nvim-tree.lua",
-    "terrortylor/nvim-comment",
     "RRethy/vim-illuminate", -- highlight same words
     "tpope/vim-surround",
     "lambdalisue/vim-suda",  -- :SudaWrite
     "bkad/CamelCaseMotion"
 })
-
-vim.cmd [[autocmd VimEnter * nested if !argc() && !exists("s:std_in") | execute 'lua require("persistence").load()' | endif]]
 
 keymap('n', '<leader>tt', ':NvimTreeToggle<CR>', opts)
 keymap('n', '<leader>tf', ':NvimTreeFindFile<CR>', opts)
@@ -527,9 +535,6 @@ require('lualine').setup {
         section_separators = { left = '', right = '' },
     }
 }
-
-require('nvim-tree').setup()
-require('nvim_comment').setup({ comment_empty = false })
 
 -- lsp configuration
 local lsp = require("lsp-zero")

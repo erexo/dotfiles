@@ -15,7 +15,7 @@ export ZSH_THEME="simple"
 export ZSH="$HOME/.oh-my-zsh"
 export PATH=$PATH:~/go/bin
 export PATH=$PATH:~/go/go/bin
-export PATH=$PATH:/opt/nvim-linux64/bin
+export PATH=$PATH:/opt/nvim-linux-x86_64/bin
 export PATH=$PATH:~/dotnet
 export DOTNET_ROOT=~/dotnet
 source $ZSH/oh-my-zsh.sh
