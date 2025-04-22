@@ -373,6 +373,12 @@ require("lazy").setup({
             require('nvim_comment').setup({ comment_empty = false })
         end
     },
+    {
+        "ramilito/kubectl.nvim",
+        config = function()
+            require("kubectl").setup()
+        end,
+    },
     "kyazdani42/nvim-web-devicons",
     "tpope/vim-fugitive", -- git management
     "nvim-lua/plenary.nvim",
@@ -391,6 +397,7 @@ keymap('n', '<leader>tw', ':WhichKey<CR>', opts)
 keymap('n', '<leader>;', ':ToggleTerm direction=float<CR>', opts)
 keymap('n', '<leader>:', ':ToggleTerm direction=horizontal<CR>', opts)
 keymap('n', '<leader>n', ':SimpleNoteList<CR>', opts)
+keymap('n', '<leader>k', ":lua require('kubectl').toggle()<CR>", opts)
 keymap('n', '<leader>N', function() vim.o.cole = vim.o.cole == 0 end, opts)
 keymap('n', '<leader>w', function() vim.o.wrap = not vim.o.wrap end, opts)
 
@@ -434,8 +441,8 @@ end, opts)
 keymap('n', '<leader>u', telescope.extensions.undo.undo)
 keymap('n', '<leader>b', telescope.extensions.hbac.buffers)
 keymap('n', '<leader>m', ':Neominimap toggle<CR>', opts)
-keymap('n', '<leader>k', telescopebin.keymaps)
-keymap('n', '<leader>K', telescopebin.command_history)
+keymap('n', '<leader>K', telescopebin.keymaps)
+keymap('n', '<leader>h', telescopebin.command_history)
 keymap('n', '<C-w>a', '<C-w>v<C-w>w<cmd>lua require\'telescope\'.extensions.menufacture.find_files()<CR>') -- open windows
 keymap('n', '<C-w>A', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.resume()<CR>')                    -- open windows
 keymap('n', '<C-w>s', '<C-w>v<C-w>w<cmd>lua require\'telescope\'.extensions.menufacture.live_grep()<CR>')
