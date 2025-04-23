@@ -144,20 +144,24 @@ keymap('n', '<leader>td', toggle_diagnostics)
 -- Lazy.nvim setup
 require("lazy").setup({
     {
-        "rebelot/kanagawa.nvim",
+        "Mofiqul/vscode.nvim",
         config = function()
-            require('kanagawa').setup({
-                overrides = function(colors)
-                    return {
-                        Function = { bold = true }
-                    }
-                end
-            })
-            vim.cmd 'colorscheme kanagawa-wave'
+            require('vscode').setup()
+            vim.cmd.colorscheme "vscode"
         end
     },
     {
         "nvim-lualine/lualine.nvim",
+        config = function()
+            require('lualine').setup {
+                options = {
+                    -- theme = 'gruvbox-material',
+                    theme = 'vscode',
+                    component_separators = { left = '|', right = '|' },
+                    section_separators = { left = '', right = '' },
+                }
+            }
+        end,
         dependencies = { "kyazdani42/nvim-web-devicons" },
     },
     {
@@ -532,14 +536,6 @@ require('nvim-treesitter.configs').setup {
                 ["[P"] = "@parameter.inner"
             }
         }
-    }
-}
-
-require('lualine').setup {
-    options = {
-        theme = 'gruvbox-material',
-        component_separators = { left = '|', right = '|' },
-        section_separators = { left = '', right = '' },
     }
 }
 
