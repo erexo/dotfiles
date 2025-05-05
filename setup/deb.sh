@@ -2,6 +2,7 @@ DOT_PATH="$(pwd -P)"/..
 mkdir -p ~/.config
 ln -sf "$DOT_PATH/.config/nvim" ~/.config/nvim
 ln -sf "$DOT_PATH/.zshrc" ~/.zshrc
+ln -sf "$DOT_PATH/.tmux.conf" ~/.tmux.conf
 echo "> links created"
 
 sudo apt install -y build-essential zsh curl
