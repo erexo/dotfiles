@@ -8,6 +8,7 @@ alias vim='nvim'
 alias v='nvim -c "Telescope find_files"'
 alias vim.edit='nvim --cmd ":cd ~/.config/nvim/" -c ":e init.lua"'
 alias zsh.edit='nvim --cmd ":cd ~/" ~/.zshrc'
+alias tmux.edit='nvim --cmd ":cd ~/" ~/.tmux.conf'
 
 DISABLE_AUTO_UPDATE="true"
 

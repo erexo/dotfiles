@@ -4,6 +4,7 @@ ln -sf "$DOT_PATH/.config/hypr" ~/.config/hypr
 ln -sf "$DOT_PATH/.config/waybar" ~/.config/waybar
 ln -sf "$DOT_PATH/.config/wofi" ~/.config/wofi
 ln -sf "$DOT_PATH/.zshrc" ~/.zshrc
+ln -sf "$DOT_PATH/.tmux.conf" ~/.tmux.conf
 echo "> links created"
 
 sudo pacman -S --noconfirm curl
@@ -20,7 +21,7 @@ go install github.com/go-delve/delve/cmd/dlv@latest
 sudo pacman -S --noconfirm neovim xclip ripgrep zip unzip
 echo "> nvim installed"
 
-sudo pacman -S --noconfirm networkmanager nemo wofi zenity
+sudo pacman -S --noconfirm tmux networkmanager nemo wofi zenity
 sudo pacman -S --noconfirm grim slurp wl-copy cliphist brightnessctl pamixer
 yay -S adwaita-dark
 yay -S hyprpicker-git

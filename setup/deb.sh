@@ -23,7 +23,7 @@ rm lazygit.tar.gz lazygit
 echo "> Lazygit $LAZYGIT_VER installed"
 
 ~/go/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest
-sudo apt install -y xclip ripgrep fd-find unzip
+sudo apt install -y tmux xclip ripgrep fd-find unzip
 curl -LO https://github.com/neovim/neovim/releases/download/v0.11.0/nvim-linux-x86_64.tar.gz
 sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
 rm nvim-linux-x86_64.tar.gz
