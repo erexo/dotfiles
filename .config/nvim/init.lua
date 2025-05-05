@@ -16,8 +16,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 vim.opt.number = true
-vim.opt.relativenumber = true
-
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
@@ -64,7 +62,7 @@ keymap(nxi, '<C-S>', '<cmd>wa<CR>')
 keymap(nxit, '<C-q>', '<cmd>quitall<CR>')
 keymap(nx, '<leader>q', '<cmd>quit<CR>')
 keymap(nx, '<leader>Q', '<cmd>tabclose<CR>')
-keymap('t', '<Esc>', '<cmd>quit<CR>')                    -- exit terminal
+keymap('t', '<C-c>', '<cmd>quit<CR>')                    -- exit terminal
 keymap('t', '<C-n>', '<C-\\><C-n>')                      -- escape terminal
 
 keymap(nx, 'c', '"_c')                                   -- don't yank on 'c'
@@ -121,18 +119,18 @@ keymap(nxi, '<C-k>', vim.lsp.buf.signature_help)
 keymap('n', '<leader>f', vim.lsp.buf.format)
 
 --> git
-keymap('n', '<leader>gs', vim.cmd.Git)
-keymap('n', '<leader>gd', '<cmd>DiffviewOpen<CR>', opts)
-keymap('n', '<leader>gf', '<cmd>DiffviewFileHistory %<CR>', opts)
-keymap('n', '<leader>gl', '<cmd>Git log<CR>', opts)
-keymap('n', '<leader>gB', '<cmd>Git blame<CR>', opts)
-keymap('n', '<leader>gc', '<cmd>Git commit<CR>', opts)
-keymap('n', '<leader>gp', '<cmd>Git push<CR>', opts)
-keymap('n', '<leader>ga', '<cmd>Git show<CR>', opts)
+-- keymap('n', '<leader>gs', vim.cmd.Git)
+-- keymap('n', '<leader>gd', '<cmd>DiffviewOpen<CR>', opts)
+-- keymap('n', '<leader>gf', '<cmd>DiffviewFileHistory %<CR>', opts)
+-- keymap('n', '<leader>gl', '<cmd>Git log<CR>', opts)
+keymap('n', '<leader>gB', '<cmd>Gitsigns blame<CR>', opts)
+-- keymap('n', '<leader>gc', '<cmd>Git commit<CR>', opts)
+-- keymap('n', '<leader>gp', '<cmd>Git push<CR>', opts)
+-- keymap('n', '<leader>ga', '<cmd>Git show<CR>', opts)
 keymap('n', '<leader>gb', '<cmd>Gitsigns blame_line<CR>', opts)
-keymap('n', '<leader>gh', '<cmd>Gitsigns preview_hunk<CR>', opts)
-keymap('n', '<leader>gn', '<cmd>Gitsigns next_hunk<CR>', opts)
-keymap('n', '<leader>gN', '<cmd>Gitsigns prev_hunk<CR>', opts)
+-- keymap('n', '<leader>gh', '<cmd>Gitsigns preview_hunk<CR>', opts)
+-- keymap('n', '<leader>gn', '<cmd>Gitsigns next_hunk<CR>', opts)
+-- keymap('n', '<leader>gN', '<cmd>Gitsigns prev_hunk<CR>', opts)
 
 local diagnostics_active = true
 local toggle_diagnostics = function()
@@ -153,16 +151,38 @@ require("lazy").setup({
     {
         "nvim-lualine/lualine.nvim",
         config = function()
-            require('lualine').setup {
+            require('lualine').setup ({
                 options = {
                     -- theme = 'gruvbox-material',
                     theme = 'vscode',
                     component_separators = { left = '|', right = '|' },
-                    section_separators = { left = '', right = '' },
-                }
-            }
+                    section_separators = { left = '', right = '' },
+                },
+                sections = { lualine_x = { "encoding", "filetype", "lsp_status" } }
+            })
         end,
         dependencies = { "kyazdani42/nvim-web-devicons" },
+    },
+    {
+        "folke/noice.nvim",
+        config = function()
+            require("noice").setup({
+                cmdline = { view = "cmdline" },
+                messages = { view_search = false }
+            })
+        end,
+        event = "VeryLazy",
+        dependencies = {
+            "MunifTanjim/nui.nvim"
+        }
+    },
+    {
+        "nvim-notify",
+        config = function()
+            require("notify").setup({
+                render = "minimal"
+            })
+        end
     },
     {
         "nvim-telescope/telescope.nvim",
@@ -253,7 +273,7 @@ require("lazy").setup({
         "mfussenegger/nvim-lint",
         config = function()
             require("lint").linters_by_ft = {
-                go = {"golangcilint"},
+                go = { "golangcilint" },
             }
 
             vim.api.nvim_create_autocmd("BufWritePost", {
@@ -268,16 +288,16 @@ require("lazy").setup({
         "windwp/nvim-autopairs",
         config = function() require("nvim-autopairs").setup() end
     },
-    {
-        "akinsho/toggleterm.nvim",
-        config = function()
-            require("toggleterm").setup {
-                start_in_insert = true,
-                insert_mappings = true,
-                terminal_mappings = true,
-            }
-        end
-    },
+    -- {
+    --     "akinsho/toggleterm.nvim",
+    --     config = function()
+    --         require("toggleterm").setup {
+    --             start_in_insert = true,
+    --             insert_mappings = true,
+    --             terminal_mappings = true,
+    --         }
+    --     end
+    -- },
     {
         "folke/trouble.nvim",
         dependencies = "nvim-tree/nvim-web-devicons",
@@ -315,10 +335,11 @@ require("lazy").setup({
         config = function()
             require("boole").setup {
                 mappings = {
-                    increment = "<C-a>",
+                    increment = "<C-i>",
                     decrement = "<C-x>"
                 },
             }
+            vim.keymap.set('n', '<C-a>', '<Nop>')
         end
     },
     {
@@ -383,23 +404,30 @@ require("lazy").setup({
             require("kubectl").setup()
         end,
     },
+    {
+        "kdheepak/lazygit.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        lazy = true,
+        keys = { { "<leader>gs", "<cmd>LazyGit<cr>" } }
+    },
     "kyazdani42/nvim-web-devicons",
-    "tpope/vim-fugitive", -- git management
+    -- "tpope/vim-fugitive", -- git management
     "nvim-lua/plenary.nvim",
-    "sindrets/diffview.nvim",
+    -- "sindrets/diffview.nvim",
     "mg979/vim-visual-multi", -- multicursor
-    "RRethy/vim-illuminate", -- highlight same words
+    "RRethy/vim-illuminate",  -- highlight same words
     "tpope/vim-surround",
-    "lambdalisue/vim-suda",  -- :SudaWrite
-    "bkad/CamelCaseMotion"
+    "lambdalisue/vim-suda",   -- :SudaWrite
+    "bkad/CamelCaseMotion",
+    "vimpostor/vim-tpipeline", -- tmux support
 })
 
 keymap('n', '<leader>tt', ':NvimTreeToggle<CR>', opts)
 keymap('n', '<leader>tf', ':NvimTreeFindFile<CR>', opts)
 keymap('n', '<leader>T', '<cmd>Trouble diagnostics toggle<CR>', opts)
 keymap('n', '<leader>tw', ':WhichKey<CR>', opts)
-keymap('n', '<leader>;', ':ToggleTerm direction=float<CR>', opts)
-keymap('n', '<leader>:', ':ToggleTerm direction=horizontal<CR>', opts)
+-- keymap('n', '<leader>;', ':ToggleTerm direction=float<CR>', opts)
+-- keymap('n', '<leader>:', ':ToggleTerm direction=horizontal<CR>', opts)
 keymap('n', '<leader>n', ':SimpleNoteList<CR>', opts)
 keymap('n', '<leader>k', ":lua require('kubectl').toggle()<CR>", opts)
 keymap('n', '<leader>N', function() vim.o.cole = vim.o.cole == 0 end, opts)
@@ -480,9 +508,11 @@ keymap('x', 'iW', '<Plug>CamelCaseMotion_iw', { silent = true })
 
 -- commands
 local function goTags(param, opts)
-  local file_path = vim.fn.expand("%:p")
-  local struct_name = vim.fn.expand("<cword>")
-  vim.cmd("!" .. string.format("gomodifytags -w -file %s -struct %s -transform keep -%s-tags %s", file_path, struct_name, param, opts.args))
+    local file_path = vim.fn.expand("%:p")
+    local struct_name = vim.fn.expand("<cword>")
+    vim.cmd("!" ..
+        string.format("gomodifytags -w -file %s -struct %s -transform keep -%s-tags %s", file_path, struct_name, param,
+            opts.args))
 end
 command('GoAddTag', function(opts) goTags("add", opts) end, { nargs = 1 })
 command('GoRemoveTag', function(opts) goTags("remove", opts) end, { nargs = 1 })
