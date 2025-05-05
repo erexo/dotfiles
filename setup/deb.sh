@@ -19,6 +19,7 @@ LAZYGIT_VER=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releas
 curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VER}/lazygit_${LAZYGIT_VER}_Linux_x86_64.tar.gz"
 tar xf lazygit.tar.gz lazygit
 sudo install lazygit -D -t /usr/local/bin/
+rm lazygit.tar.gz lazygit
 echo "> Lazygit $LAZYGIT_VER installed"
 
 ~/go/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest

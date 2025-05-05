@@ -23,6 +23,6 @@ source $ZSH/oh-my-zsh.sh
 export EDITOR='nvim'
 export TERM='xterm-256color'
 
-if [ -z "$TMUX" ]; then
+if [ -z "$TMUX" ] && command -v tmux >/dev/null 2>&1; then
   tmux attach-session -t main || tmux new-session -s main
 fi
