@@ -27,3 +27,6 @@ export TERM='xterm-256color'
 if [ -z "$TMUX" ] && command -v tmux >/dev/null 2>&1; then
   tmux attach-session -t main || tmux new-session -s main
 fi
+
+ZSHRC_DIR="dotfiles"
+[[ -f "$ZSHRC_DIR/.extrarc" ]] && source "$ZSHRC_DIR/.extrarc"
