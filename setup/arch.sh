@@ -45,6 +45,7 @@ sudo pacman -S --noconfirm pipewire wireplumber xdg-desktop-portal-hyprland
 sudo pacman -S --noconfirm tmux networkmanager nemo wofi zenity hyprpaper waybar
 sudo pacman -S --noconfirm grim slurp wl-clipboard cliphist brightnessctl pamixer
 sudo pacman -S --noconfirm ttf-font-awesome noto-fonts-emoji
+sudo pacman -S --noconfirm fastfetch btop
 yay -Sy --needed --noconfirm adwaita-dark nerd-fonts unimatrix wofi-emoji
 echo "> useful packages installed"
 
