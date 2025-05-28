@@ -28,14 +28,14 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 echo "> zsh installed"
 
 go install github.com/go-delve/delve/cmd/dlv@latest
-sudo pacman -S --noconfirm neovim xclip ripgrep zip unzip
+sudo pacman -S --noconfirm neovim xclip ripgrep zip unzip lazygit
 echo "> nvim installed"
 
-sudo pacman -S --noconfirm hyprland
-yay -S hyprpicker-git
+sudo pacman -S --noconfirm hyprland hyprpicker
 echo "> hyprland installed"
 
 sudo pacman -S --noconfirm ly
+sudo systemctl enable ly
 echo "animation = matrix" | sudo tee -a /etc/ly/config.ini
 echo "kernel.printk = 3 3 3 3" | sudo tee /etc/sysctl.d/99-silence-kernel.conf
 echo "> ly installed"
@@ -51,3 +51,5 @@ echo "> enabled network manager"
 
 curl -fsS https://dl.brave.com/install.sh | sh
 echo "> brave installed"
+
+echo "reboot now"
