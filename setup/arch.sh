@@ -18,6 +18,7 @@ wget -qO- https://go.dev/dl/$GO_VER.linux-amd64.tar.gz | tar -xz -C ~/go
 echo "> $GO_VER installed"
 
 sudo pacman -S --needed --noconfirm git base-devel && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
+rm -rf yay
 echo "> yay installed"
 
 sudo pacman -S --noconfirm kitty
@@ -40,8 +41,10 @@ echo "animation = matrix" | sudo tee -a /etc/ly/config.ini
 echo "kernel.printk = 3 3 3 3" | sudo tee /etc/sysctl.d/99-silence-kernel.conf
 echo "> ly installed"
 
+sudo pacman -S --noconfirm pipewire wireplumber xdg-desktop-portal-hyprland
 sudo pacman -S --noconfirm tmux networkmanager nemo wofi zenity hyprpaper waybar
 sudo pacman -S --noconfirm grim slurp wl-clipboard cliphist brightnessctl pamixer
+sudo pacman -S --noconfirm ttf-font-awesome noto-fonts-emoji
 yay -Sy --needed --noconfirm adwaita-dark nerd-fonts unimatrix wofi-emoji
 echo "> useful packages installed"
 
@@ -49,7 +52,7 @@ sudo systemctl enable NetworkManager
 sudo systemctl start NetworkManager
 echo "> enabled network manager"
 
-curl -fsS https://dl.brave.com/install.sh | sh
+yay -Sy --needed --noconfirm brave-bin
 echo "> brave installed"
 
 echo "reboot now"
