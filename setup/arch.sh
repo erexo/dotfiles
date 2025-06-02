@@ -42,7 +42,8 @@ echo "kernel.printk = 3 3 3 3" | sudo tee /etc/sysctl.d/99-silence-kernel.conf
 echo "> ly installed"
 
 sudo pacman -S --noconfirm pipewire wireplumber xdg-desktop-portal-hyprland
-sudo pacman -S --noconfirm tmux networkmanager nemo wofi zenity hyprpaper waybar
+sudo pacman -S --noconfirm tmux networkmanager wofi zenity hyprpaper waybar
+sudo pacman -S --noconfirm thunar tumbler thunar-archive-plugin file-roller
 sudo pacman -S --noconfirm grim slurp wl-clipboard cliphist brightnessctl pamixer
 sudo pacman -S --noconfirm ttf-font-awesome noto-fonts-emoji
 sudo pacman -S --noconfirm fastfetch btop
