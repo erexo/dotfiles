@@ -198,6 +198,9 @@ require("lazy").setup({
             telescope.setup({
                 defaults = {
                     prompt_prefix = "   ",
+                    file_ignore_patterns = {
+                        "testmock/"
+                    }
                 },
                 extensions = {
                     ["ui-select"] = { require("telescope.themes").get_dropdown {} },
