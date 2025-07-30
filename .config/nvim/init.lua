@@ -176,14 +176,14 @@ require("lazy").setup({
             "MunifTanjim/nui.nvim"
         }
     },
-    {
-        "rcarriga/nvim-notify",
-        config = function()
-            require("notify").setup({
-                render = "minimal"
-            })
-        end
-    },
+    -- {
+    --     "rcarriga/nvim-notify",
+    --     config = function()
+    --         require("notify").setup({
+    --             render = "minimal"
+    --         })
+    --     end
+    -- },
     {
         "nvim-telescope/telescope.nvim",
         dependencies = {
@@ -475,10 +475,7 @@ keymap('n', '<leader>b', telescope.extensions.hbac.buffers)
 keymap('n', '<leader>m', ':Neominimap toggle<CR>', opts)
 keymap('n', '<leader>K', telescopebin.keymaps)
 keymap('n', '<leader>h', telescopebin.command_history)
-keymap('n', '<C-w>a', '<C-w>v<C-w>w<cmd>lua require\'telescope\'.extensions.menufacture.find_files()<CR>') -- open windows
-keymap('n', '<C-w>A', '<C-w>v<C-w>w<cmd>lua require\'telescope.builtin\'.resume()<CR>')                    -- open windows
-keymap('n', '<C-w>s', '<C-w>v<C-w>w<cmd>lua require\'telescope\'.extensions.menufacture.live_grep()<CR>')
-keymap('n', '<C-w>S', '<C-w>v<C-w>w<cmd>lua require\'telescope\'.extensions.menufacture.grep_string()<CR>')
+keymap('n', '<C-w>a', '<C-w>v<C-w>w')
 keymap('n', '<C-w><C-e>', function()
     if vim.api.nvim_win_get_option(0, 'winfixwidth') then
         return
