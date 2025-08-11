@@ -197,6 +197,24 @@ require("lazy").setup({
             local telescope = require("telescope")
             telescope.setup({
                 defaults = {
+                    mappings = {
+                        i = { ["<esc>"] = require("telescope.actions").close }
+                    },
+                    layout_config = {
+                        height = 0.9,
+                        width = 0.9,
+                        preview_width = 0.65
+                    },
+                    vimgrep_arguments = {
+                        "rg",
+                        "--color=never",
+                        "--no-heading",
+                        "--with-filename",
+                        "--line-number",
+                        "--column",
+                        "--smart-case",
+                        "--fixed-strings",
+                    },
                     prompt_prefix = "   ",
                     file_ignore_patterns = {
                         "testmock/"
@@ -491,7 +509,7 @@ keymap('n', '<C-w><C-e>', function()
             windows = windows + 1
         end
     end
-    local expandWidth = math.ceil(total_width * 2 / 3)
+    local expandWidth = math.ceil(total_width * 4 / 5)
     if vim.api.nvim_win_get_width(0) >= expandWidth then
         vim.api.nvim_win_set_width(0, math.ceil(total_width / windows))
     else
