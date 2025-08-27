@@ -151,7 +151,7 @@ require("lazy").setup({
     {
         "nvim-lualine/lualine.nvim",
         config = function()
-            require('lualine').setup ({
+            require('lualine').setup({
                 options = {
                     -- theme = 'gruvbox-material',
                     theme = 'vscode',
@@ -175,6 +175,13 @@ require("lazy").setup({
         dependencies = {
             "MunifTanjim/nui.nvim"
         }
+    },
+    {
+        "jakobknauer/cppswitch",
+        config = function()
+            require("cppswitch").setup()
+        end,
+        keys = { { "<leader>C", "<cmd>CppswitchSwitch<cr>" } }
     },
     -- {
     --     "rcarriga/nvim-notify",
@@ -201,9 +208,11 @@ require("lazy").setup({
                         i = { ["<esc>"] = require("telescope.actions").close }
                     },
                     layout_config = {
+                        horizontal = {
+                            preview_width = 0.6
+                        },
                         height = 0.9,
-                        width = 0.9,
-                        preview_width = 0.65
+                        width = 0.9
                     },
                     vimgrep_arguments = {
                         "rg",
@@ -435,10 +444,10 @@ require("lazy").setup({
     -- "tpope/vim-fugitive", -- git management
     "nvim-lua/plenary.nvim",
     -- "sindrets/diffview.nvim",
-    "mg979/vim-visual-multi", -- multicursor
-    "RRethy/vim-illuminate",  -- highlight same words
+    "mg979/vim-visual-multi",  -- multicursor
+    "RRethy/vim-illuminate",   -- highlight same words
     "tpope/vim-surround",
-    "lambdalisue/vim-suda",   -- :SudaWrite
+    "lambdalisue/vim-suda",    -- :SudaWrite
     "bkad/CamelCaseMotion",
     "vimpostor/vim-tpipeline", -- tmux support
 })
