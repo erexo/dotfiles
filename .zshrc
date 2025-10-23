@@ -12,6 +12,8 @@ alias tmux.edit='nvim --cmd ":cd ~/" ~/.tmux.conf'
 
 alias c='xclip -selection clipboard'
 
+alias cd.dot='cd ~/dotfiles'
+
 DISABLE_AUTO_UPDATE="true"
 
 export ZSH_THEME="simple"
