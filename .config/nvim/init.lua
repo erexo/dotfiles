@@ -435,6 +435,10 @@ require("lazy").setup({
         end,
     },
     {
+        "FabianWirth/search.nvim",
+        dependencies = { "nvim-telescope/telescope.nvim" }
+    },
+    {
         "kdheepak/lazygit.nvim",
         dependencies = { "nvim-lua/plenary.nvim" },
         lazy = true,
@@ -483,13 +487,21 @@ keymap('v', '<leader>cu', crates.upgrade_crates, opts)
 
 local telescope = require('telescope')
 local telescopebin = require('telescope.builtin')
+local search = require('search')
+search.setup({
+  tabs = {
+    { "Files", function(o) telescope.extensions.menufacture.find_files(o) end },
+    { "Grep", function(o) telescope.extensions.menufacture.live_grep(o) end }
+  },
+})
+
 keymap(nx, '<leader>rf', telescopebin.lsp_references)
 keymap(nx, '<leader>ef', telescopebin.lsp_implementations)
 keymap(nx, '<leader>ds', telescopebin.lsp_document_symbols)
-keymap('n', '<leader>a', telescope.extensions.menufacture.find_files)
+keymap('n', '<leader>a', function() search.open({ tab_name = 'Files' }) end)
 keymap('n', '<leader>A', telescopebin.resume)
-keymap('n', '<leader>s', telescope.extensions.menufacture.live_grep)
-keymap('n', '<leader>S', telescope.extensions.menufacture.grep_string)
+keymap('n', '<leader>s', function() search.open({ tab_name = 'Grep' }) end)
+keymap('n', '<leader>S', function() search.open({ tab_name = 'Grep', default_text = vim.fn.expand("<cword>")}) end)
 keymap('v', '<leader>S', function()
     vim.cmd('noau normal! "vy"')
     local text = vim.fn.getreg('v')
@@ -498,7 +510,7 @@ keymap('v', '<leader>S', function()
     if #text == 0 then
         text = ''
     end
-    telescope.extensions.menufacture.live_grep({ default_text = text })
+    search.open({ tab_name = 'Grep', default_text = text})
 end, opts)
 keymap('n', '<leader>u', telescope.extensions.undo.undo)
 keymap('n', '<leader>b', telescope.extensions.hbac.buffers)
