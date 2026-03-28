@@ -16,6 +16,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 vim.opt.number = true
+vim.opt.cursorline = true
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
@@ -265,23 +266,50 @@ require("lazy").setup({
         },
         config = function()
             require('minuet').setup {
-                provider_options = {
-                    openai_compatible = {
-                        model = 'gemini-2.5-flash',
-                        -- system = "see [Prompt] section for the default value",
-                        -- few_shots = "see [Prompt] section for the default value",
-                        -- chat_input = "See [Prompt Section for default value]",
-                        stream = true,
-                        end_point = 'AI_URL',
-                        api_key = 'AI_API_KEY',
-                        name = 'Openrouter',
-                        -- optional = {
-                        --     stop = nil,
-                        --     max_tokens = nil,
-                        -- },
-                        -- -- a list of functions to transform the endpoint, header, and request body
-                        -- transform = {},
+                provider = 'gemini',
+                virtualtext = {
+                    auto_trigger_ft = { },
+                    keymap = {
+                        accept = '<A-a>',
+                        accept_line = '<A-s>',
+                        prev = '<A-[>',
+                        next = '<A-]>',
+                        dismiss = '<A-e>',
                     }
+                },
+                provider_options = {
+                    gemini = {
+                        model = 'gemini-2.0-flash',
+                        system = {
+                            prompt = [[
+                            You are an expert developer specializing in concise, technical documentation.
+                            Your task is to provide code or comments based on the cursor's context.
+
+                            STRICT STYLE RULES for Comments:
+                            1. NEVER use boilerplate like "This function is...", "X is a struct that...", or "This method handles...".
+                            2. Use the format: "<Name> <verb> <description>." 
+                            - Good: "// httpserver handles the http requests."
+                            - Bad: "// httpserver is a function which handles the http requests."
+                            3. If the cursor is below a comment, implement the code logic it describes.
+                            4. If the cursor is above a code block, generate a one-line documentation comment for it.
+                            5. Provide ONLY the requested text. No markdown, no explanations.]]
+                        }
+                    },
+                    -- openai_compatible = {
+                    --     model = 'gemini-2.5-flash',
+                    --     -- few_shots = "see [Prompt] section for the default value",
+                    --     -- chat_input = "See [Prompt Section for default value]",
+                    --     stream = true,
+                    --     end_point = 'AI_URL',
+                    --     api_key = 'AI_API_KEY',
+                    --     name = 'Openrouter',
+                    --     -- optional = {
+                    --     --     stop = nil,
+                    --     --     max_tokens = nil,
+                    --     -- },
+                    --     -- -- a list of functions to transform the endpoint, header, and request body
+                    --     -- transform = {},
+                    -- }
                 }
             }
         end,
@@ -296,6 +324,7 @@ require("lazy").setup({
         dependencies = {
             'xzbdmw/colorful-menu.nvim',
             'rafamadriz/friendly-snippets',
+            'milanglacier/minuet-ai.nvim',
             'bydlw98/blink-cmp-env',
             'barrettruth/blink-cmp-tmux',
             'moyiz/blink-emoji.nvim',
@@ -305,7 +334,7 @@ require("lazy").setup({
         opts = {
             keymap = {
                 preset = 'enter',
-                ['<Esc>'] = { 'hide', 'fallback' },
+                ['<Esc>'] = { 'hide', 'fallback' }
             },
             completion = {
                 ghost_text = { enabled = true },
@@ -327,9 +356,9 @@ require("lazy").setup({
                 },
             },
             sources = {
-                default = { 'lsp', 'path', 'snippets', 'minuet', 'env', 'tmux', 'emoji', 'lazydev' },
+                default = { 'lsp', 'path', 'snippets', 'env', 'tmux', 'emoji', 'lazydev' },
                 providers = {
-                    minuet = { name = 'Minuet', module = 'minuet.blink' },
+                    -- minuet = { name = 'Minuet', module = 'minuet.blink' },
                     env = { name = 'Env', module = 'blink-cmp-env' },
                     tmux = { name = 'Tmux', module = 'blink-cmp-tmux' },
                     emoji = { name = 'Emoji', module = 'blink-emoji' },
