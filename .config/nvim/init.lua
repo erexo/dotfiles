@@ -96,6 +96,7 @@ keymap('v', '<', '<gv')                     -- keep selection while indenting
 keymap('v', '>', '>gv')
 keymap('v', 'J', ":m '>+1<CR>gv=gv")        -- move selected up/down
 keymap('v', 'K', ":m '<-2<CR>gv=gv")
+keymap('v', 'il', "^o$h")                    -- select line
 keymap(nxi, '<A-Left>', '<C-o>')            -- navigate buffers
 keymap(nxi, '<A-Right>', '<C-i>')
 keymap(nxi, '<C-w><C-Left>', '<C-w><Left>') -- nawigate windows
@@ -142,6 +143,13 @@ keymap('n', '<leader>td', toggle_diagnostics)
 
 -- Lazy.nvim setup
 require("lazy").setup({
+    {
+        "jackplus-xyz/player-one.nvim",
+        opts = {
+            is_enabled = false,
+            master_volume = 0.3
+        }
+    },
     {
         "Mofiqul/vscode.nvim",
         config = function()
