@@ -251,29 +251,93 @@ require("lazy").setup({
         build = ":TSUpdate"
     },
     {
-        "VonHeikemen/lsp-zero.nvim",
-        branch = "v3.x",
+        "neovim/nvim-lspconfig",
         dependencies = {
-            -- LSP Support
-            "neovim/nvim-lspconfig",
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
-            -- Autocompletion
-            "hrsh7th/nvim-cmp",
-            "hrsh7th/cmp-nvim-lsp",
-            "onsails/lspkind.nvim",
-            "hrsh7th/cmp-nvim-lsp-signature-help",
-            -- Snippets
-            "L3MON4D3/LuaSnip",
-            "saadparwaiz1/cmp_luasnip",
-            "rafamadriz/friendly-snippets",
-            -- Debugging
-            "mfussenegger/nvim-dap",
-            "rcarriga/nvim-dap-ui",
-            "nvim-neotest/nvim-nio",
-            "theHamsta/nvim-dap-virtual-text",
-            "leoluz/nvim-dap-go",
+            { "j-hui/fidget.nvim", opts = {} }
         }
+    },
+    {
+        'milanglacier/minuet-ai.nvim',
+        dependencies = {
+            'nvim-lua/plenary.nvim'
+        },
+        config = function()
+            require('minuet').setup {
+                provider_options = {
+                    openai_compatible = {
+                        model = 'gemini-2.5-flash',
+                        -- system = "see [Prompt] section for the default value",
+                        -- few_shots = "see [Prompt] section for the default value",
+                        -- chat_input = "See [Prompt Section for default value]",
+                        stream = true,
+                        end_point = 'AI_URL',
+                        api_key = 'AI_API_KEY',
+                        name = 'Openrouter',
+                        -- optional = {
+                        --     stop = nil,
+                        --     max_tokens = nil,
+                        -- },
+                        -- -- a list of functions to transform the endpoint, header, and request body
+                        -- transform = {},
+                    }
+                }
+            }
+        end,
+    },
+    {
+        "folke/lazydev.nvim",
+        ft = "lua",
+        opts = { library = { { path = "${3rd}/luv/library", words = { "vim%.uv" } } } },
+    },
+    {
+        'saghen/blink.cmp',
+        dependencies = {
+            'xzbdmw/colorful-menu.nvim',
+            'rafamadriz/friendly-snippets',
+            'bydlw98/blink-cmp-env',
+            'barrettruth/blink-cmp-tmux',
+            'moyiz/blink-emoji.nvim',
+            "folke/lazydev.nvim",
+        },
+        version = '1.*',
+        opts = {
+            keymap = {
+                preset = 'enter',
+                ['<Esc>'] = { 'hide', 'fallback' },
+            },
+            completion = {
+                ghost_text = { enabled = true },
+                trigger = { prefetch_on_insert = false },
+                menu = {
+                    draw = {
+                        columns = { { "kind_icon" }, { "label", gap = 1 } },
+                        components = {
+                            label = {
+                                text = function(ctx)
+                                    return require("colorful-menu").blink_components_text(ctx)
+                                end,
+                                highlight = function(ctx)
+                                    return require("colorful-menu").blink_components_highlight(ctx)
+                                end,
+                            },
+                        },
+                    },
+                },
+            },
+            sources = {
+                default = { 'lsp', 'path', 'snippets', 'minuet', 'env', 'tmux', 'emoji', 'lazydev' },
+                providers = {
+                    minuet = { name = 'Minuet', module = 'minuet.blink' },
+                    env = { name = 'Env', module = 'blink-cmp-env' },
+                    tmux = { name = 'Tmux', module = 'blink-cmp-tmux' },
+                    emoji = { name = 'Emoji', module = 'blink-emoji' },
+                    lazydev = { name = 'LazyDev', module = 'lazydev.integrations.blink' },
+                },
+            },
+        },
+        opts_extend = { "sources.default" }
     },
     {
         "nvim-neotest/neotest",
@@ -300,6 +364,16 @@ require("lazy").setup({
         end
     },
     {
+        -- Debugging
+        "mfussenegger/nvim-dap",
+        dependencies = {
+            "rcarriga/nvim-dap-ui",
+            "nvim-neotest/nvim-nio",
+            "theHamsta/nvim-dap-virtual-text",
+            "leoluz/nvim-dap-go",
+        }
+    },
+    {
         "mfussenegger/nvim-lint",
         config = function()
             require("lint").linters_by_ft = {
@@ -318,16 +392,6 @@ require("lazy").setup({
         "windwp/nvim-autopairs",
         config = function() require("nvim-autopairs").setup() end
     },
-    -- {
-    --     "akinsho/toggleterm.nvim",
-    --     config = function()
-    --         require("toggleterm").setup {
-    --             start_in_insert = true,
-    --             insert_mappings = true,
-    --             terminal_mappings = true,
-    --         }
-    --     end
-    -- },
     {
         "folke/trouble.nvim",
         dependencies = "nvim-tree/nvim-web-devicons",
@@ -609,78 +673,37 @@ require('nvim-treesitter.configs').setup {
 }
 
 -- lsp configuration
-local lsp = require("lsp-zero")
-lsp.extend_lspconfig()
 require('mason').setup()
 require('mason-lspconfig').setup({
-    ensure_installed = {
-        'gopls',
-        'rust_analyzer',
-        'marksman'
+    ensure_installed = { 'gopls', 'rust_analyzer', 'marksman' }
+})
+local capabilities = require('blink.cmp').get_lsp_capabilities()
+local servers = { gopls = {}, rust_analyzer = {}, marksman = {} }
+
+for server, config in pairs(servers) do
+    config.capabilities = capabilities
+    vim.lsp.config(server, config)
+    vim.lsp.enable(server)
+end
+
+vim.diagnostic.config({
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = "",
+            [vim.diagnostic.severity.WARN]  = "",
+            [vim.diagnostic.severity.HINT]  = "",
+            [vim.diagnostic.severity.INFO]  = "",
+        },
     },
-    handlers = { lsp.default_setup }
+    virtual_text = true
 })
 
-require('luasnip.loaders.from_vscode').lazy_load()
-require("luasnip").config.setup({
-    region_check_events = "CursorMoved",
-    delete_check_events = "TextChanged",
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*.go",
+  callback = function()
+    vim.lsp.buf.format({ name = "gopls", async = false })
+  end
 })
-
-local cmp = require('cmp')
-local cmp_action = lsp.cmp_action()
-cmp.setup({
-    preselect = 'item',
-    completion = {
-        completeopt = 'menu,menuone,noinsert'
-    },
-    window = {
-        completion = cmp.config.window.bordered(),
-        documentation = cmp.config.window.bordered(),
-    },
-    sources = {
-        { name = 'nvim_lsp' },
-        { name = 'nvim_lua' },
-        { name = 'luasnip' },
-        { name = 'nvim_lsp_signature_help' },
-    },
-    mapping = {
-        ['<Up>'] = cmp.mapping.select_prev_item({ behavior = 'select' }),
-        ['<Down>'] = cmp.mapping.select_next_item({ behavior = 'select' }),
-        ['<Tab>'] = cmp_action.luasnip_supertab(),
-        ['<S-Tab>'] = cmp_action.luasnip_shift_supertab(),
-        ['<CR>'] = cmp.mapping.confirm(),
-        ['<C-e>'] = cmp.mapping.abort(),
-        ['<C-N>'] = cmp.mapping(function()
-            if cmp.visible() then
-                cmp.abort()
-            else
-                cmp.complete()
-            end
-        end),
-    },
-    snippet = {
-        expand = function(args)
-            require('luasnip').lsp_expand(args.body)
-        end,
-    },
-    formatting = {
-        format = require('lspkind').cmp_format({ mode = 'symbol' })
-    }
-})
-lsp.set_sign_icons({
-    error = "",
-    warn = "",
-    hint = "",
-    info = ""
-})
-lsp.format_on_save({
-    servers = {
-        ['gopls'] = { 'go' },
-        ['rust_analyzer'] = { 'rust' }
-    }
-})
-lsp.setup()
 
 -- debugger configuration
 require('dap-go').setup()
