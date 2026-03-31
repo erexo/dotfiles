@@ -345,8 +345,7 @@ require("lazy").setup({
                 ['<Esc>'] = { 'hide', 'fallback' }
             },
             completion = {
-                ghost_text = { enabled = true },
-                trigger = { prefetch_on_insert = false },
+                ghost_text = { enabled = false },
                 menu = {
                     draw = {
                         columns = { { "kind_icon" }, { "label", gap = 1 } },
