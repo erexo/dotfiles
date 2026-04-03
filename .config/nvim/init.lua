@@ -167,7 +167,10 @@ require("lazy").setup({
                     component_separators = { left = '|', right = '|' },
                     section_separators = { left = '', right = '' },
                 },
-                sections = { lualine_x = { "encoding", "filetype", "lsp_status" } }
+                sections = { 
+                    lualine_x = { "encoding", "filetype", "lsp_status" },
+                    lualine_z = { { require("opencode").statusline } }
+                }
             })
         end,
         dependencies = { "kyazdani42/nvim-web-devicons" },
@@ -268,58 +271,28 @@ require("lazy").setup({
         }
     },
     {
-        'milanglacier/minuet-ai.nvim',
-        dependencies = {
-            'nvim-lua/plenary.nvim'
-        },
+        "nickjvandyke/opencode.nvim",
+        version = "*",
         config = function()
-            require('minuet').setup {
-                provider = 'gemini',
-                virtualtext = {
-                    auto_trigger_ft = { },
-                    keymap = {
-                        accept = '<A-a>',
-                        accept_line = '<A-s>',
-                        prev = '<A-[>',
-                        next = '<A-]>',
-                        dismiss = '<A-e>',
-                    }
+            vim.g.opencode_opts = {
+                prompts = {
+                    ask = { prompt = "@this ", ask = true, submit = true },
+                    diff = false,
+                    document = false,
+                    comment = { prompt = [[Generate and insert a single-line comment for @this to be placed above the code.
+                    - If it's a struct or function declaration: start with the name.
+                    - If it's code inside a function: start with lowercase.
+                    - Constraint: Do not include a period at the end.
+                    - Output ONLY the comment text.
+                    ]], submit = true },
                 },
-                provider_options = {
-                    gemini = {
-                        model = 'gemini-2.0-flash',
-                        system = {
-                            prompt = [[
-                            You are an expert developer specializing in concise, technical documentation.
-                            Your task is to provide code or comments based on the cursor's context.
-
-                            STRICT STYLE RULES for Comments:
-                            1. NEVER use boilerplate like "This function is...", "X is a struct that...", or "This method handles...".
-                            2. Use the format: "<Name> <verb> <description>." 
-                            - Good: "// httpserver handles the http requests."
-                            - Bad: "// httpserver is a function which handles the http requests."
-                            3. If the cursor is below a comment, implement the code logic it describes.
-                            4. If the cursor is above a code block, generate a one-line documentation comment for it.
-                            5. Provide ONLY the requested text. No markdown, no explanations.]]
-                        }
-                    },
-                    -- openai_compatible = {
-                    --     model = 'gemini-2.5-flash',
-                    --     -- few_shots = "see [Prompt] section for the default value",
-                    --     -- chat_input = "See [Prompt Section for default value]",
-                    --     stream = true,
-                    --     end_point = 'AI_URL',
-                    --     api_key = 'AI_API_KEY',
-                    --     name = 'Openrouter',
-                    --     -- optional = {
-                    --     --     stop = nil,
-                    --     --     max_tokens = nil,
-                    --     -- },
-                    --     -- -- a list of functions to transform the endpoint, header, and request body
-                    --     -- transform = {},
-                    -- }
-                }
+                select = { prompt = "opencode" }
             }
+
+            vim.o.autoread = true
+            keymap(nx, "<C-f>", function() require("opencode").select() end)
+            keymap('t', "<C-u>", function() require("opencode").command("session.half.page.up") end)
+            keymap('t', "<C-d>", function() require("opencode").command("session.half.page.down") end)
         end,
     },
     {
